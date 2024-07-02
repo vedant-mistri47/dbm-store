@@ -438,6 +438,7 @@ const About = () => {
               >
                 {index === 0 && (
                   <Button
+                  
                     variant="contained"
                     color="primary"
                     href="https://anydesk.com/en/downloads/windows"
@@ -565,51 +566,6 @@ const About = () => {
         </Grid>
       </Card>
 
-      <Grid container spacing={4} sx={{ padding: " 34px 0" }}>
-        <Grid item xs={12} md={6}>
-          <Typography variant="title">Trust Is Earned, </Typography>
-          <Typography variant="title"> Not Given</Typography>
-          <Box>
-            <Typography align="justify" marginTop={"30px"} variant="body">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type Lorem Ipsum has been type
-            </Typography>
-          </Box>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={6}
-          container
-          justifyContent={{ xs: "center", md: "flex-start" }}
-          alignItems="center"
-        >
-          <Grid container spacing={2} justifyContent="center">
-            {logos.map((logo, index) => (
-              <Grid
-                item
-                xs={6}
-                sm={4}
-                md={4}
-                key={index}
-                style={{ textAlign: "center" }}
-              >
-                <Box
-                  sx={{
-                    width: { md: "60%", sm: "40%", xs: "60%" },
-                    margin: "auto",
-                  }}
-                >
-                  <img src={logo.src} alt={logo.alt} width="100%" />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
     </Container>
   );
 };

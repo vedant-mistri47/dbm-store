@@ -652,7 +652,9 @@ const Navbar = () => {
           >
             {/* logo */}
             <Box sx={{ width: { xs: "40%", md: "20%" } }}>
+            <a href="#home" onClick={() => setActivePage("#home")}>
               <img src={logo} alt="Logo" width="100%" />
+              </a>
             </Box>
 
             {/* links */}

@@ -269,6 +269,7 @@ const Home = () => {
                       <Grid item xs={12}>
                         <TextField
                           autoFocus
+                            size="small"
                           margin="dense"
                           name="name"
                           label="Name"
@@ -283,7 +284,7 @@ const Home = () => {
                         <PhoneInput
                           inputStyle={{
                             width: "100%",
-                            height: "55px",
+                            height: "40px",
                             fontSize: "1.25rem",
                           }}
                           margin="dense"
@@ -296,6 +297,7 @@ const Home = () => {
                       <Grid item xs={12}>
                         <TextField
                           margin="dense"
+                          size="small"
                           name="email"
                           label="Email"
                           type="email"
@@ -307,7 +309,7 @@ const Home = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
-                        
+                          size="small"
                           margin="dense"
                           name="product"
                           label="Select Product"
@@ -347,76 +349,8 @@ const Home = () => {
                           ))}
                         </TextField>
                       </Grid>
-                      <Grid item xs={12} md={6}>
-                        <TextField
-                          margin="dense"
-                          name="city"
-                          label="City"
-                          type="text"
-                          fullWidth
-                          value={formValues.city}
-                          onChange={handleInputChange}
-                          sx={{ fontSize: "1.25rem" }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        {/* <TextField
-                          margin="dense"
-                          name="country"
-                          label="Country"
-                          type="text"
-                          fullWidth
-                          value={formValues.country}
-                          onChange={handleInputChange}
-                          SelectProps={{
-                            MenuProps: {
-                              PaperProps: {
-                                style: {
-                                  maxHeight: 300,
-                                  overflow: "auto",
-                                },
-                              },
-                            },
-                          }}
-                          sx={{ fontSize: "1.25rem" }}
-                        >
-                          {countrys?.map((country) => (
-                            <MenuItem key={country.name} value={country.countryNameEn}>
-                              {country.countryNameEn}
-                            </MenuItem>
-                          ))}
-
-                      </TextField>                           */}
-                        <TextField
-                        
-                        margin="dense"
-                        name="country"
-                        label="Country"
-                        select
-                       
-                        fullWidth
-                        value={formValues.country}
-                        onChange={handleInputChange}
-                        SelectProps={{
-                          MenuProps: {
-                            PaperProps: {
-                              style: {
-                                maxHeight: 200,
-                                maxWidth:140,
-                                overflow: "auto",
-                              },
-                            },
-                          },
-                        }}
-                        sx={{ fontSize: "1.25rem" }}
-                      >
-                        {countrys?.map((country , i) => (
-                          <MenuItem key={i} value={country.countryNameEn}  >
-                            {country.countryNameEn}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                      </Grid>
+                     
+                     
                     </Grid>
                   </Box>
                   <Box
@@ -562,7 +496,7 @@ const Home = () => {
                  <Box
                    component="span"
                    sx={{
-                     color: theme.palette.primary.main, // Use the primary color from the theme
+                     color: theme.palette.primary.main, 
                      mx: 1,
                    }}
                  >

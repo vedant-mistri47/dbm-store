@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, Modal, Typography } from '@mui/material';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import React, { useState } from "react";
 import {
@@ -17,6 +17,7 @@ import { setUserDetail } from '../../redux/payment/paymentSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../util/axiosInstance';
 import { CURRENCIES_SYMBOL } from '../currency/currency';
+import countrys  from '../../countryList.json' 
 
 const Checkout = ({ onClose }) => {
     const [name, setName] = useState("");
@@ -219,6 +220,9 @@ const Checkout = ({ onClose }) => {
                 <Typography fontWeight={600} align="center">Checkout</Typography>
             </Grid>
             <Box sx={{ p: 2 }}>
+                <Typography variant="h6" component="div">
+                        Total Price : {currencySymbol}{(subtotal * exchangeRates).toFixed(2)}
+                    </Typography>
                 <Box display="flex" justifyContent="space-between" alignItems="center" >
                     <Typography variant="h6"> Address</Typography>
                 </Box>
@@ -247,6 +251,7 @@ const Checkout = ({ onClose }) => {
                                 label="Name"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 error={!!errors.name}
@@ -258,6 +263,7 @@ const Checkout = ({ onClose }) => {
                                 label="Email"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 error={!!errors.email}
@@ -268,7 +274,7 @@ const Checkout = ({ onClose }) => {
                             <PhoneInput
                                 inputStyle={{
                                     width: "100%",
-                                    height: "55px",
+                                    height: "40px",
                                     fontFamily: "Monospace",
                                     border: "1px solid #AEB4BE",
                                 }}
@@ -291,6 +297,7 @@ const Checkout = ({ onClose }) => {
                                 label="Billing address"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 error={!!errors.address}
@@ -303,6 +310,7 @@ const Checkout = ({ onClose }) => {
                                 variant="outlined"
                                 fullWidth
                                 value={city}
+                                  size="small"
                                 onChange={(e) => setCity(e.target.value)}
                                 error={!!errors.city}
                                 helperText={errors.city}
@@ -314,27 +322,50 @@ const Checkout = ({ onClose }) => {
                                 variant="outlined"
                                 fullWidth
                                 value={state}
+                                  size="small"
                                 onChange={(e) => setState(e.target.value)}
                                 error={!!errors.state}
                                 helperText={errors.state}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <TextField
-                                label="Country"
-                                variant="outlined"
-                                fullWidth
-                                value={country}
-                                onChange={(e) => setCountry(e.target.value)}
-                                error={!!errors.country}
-                                helperText={errors.country}
-                            />
+                        <TextField
+                        
+                        margin="dense"
+                        name="country"
+                        label="Country"
+                        select
+                          size="small"
+                        onChange={(e) => setCountry(e.target.value)}
+                        fullWidth
+                        value={country}
+             
+                        SelectProps={{
+                          MenuProps: {
+                            PaperProps: {
+                              style: {
+                                maxHeight: 200,
+                                maxWidth:140,
+                                overflow: "auto",
+                              },
+                            },
+                          },
+                        }}
+                        sx={{ fontSize: "1.25rem" }}
+                      >
+                        {countrys?.map((country , i) => (
+                          <MenuItem key={i} value={country.countryNameEn}  >
+                            {country.countryNameEn}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
                                 label="Zip code"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={zip}
                                 onChange={(e) => setZip(e.target.value)}
                                 error={!!errors.zip}
