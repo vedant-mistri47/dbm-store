@@ -35,6 +35,10 @@ function Footer() {
   const [newsletterName, setNewsletterName] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [validationErrors, setValidationErrors] = useState({
+    name: "",
+    email: "",
+  });
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -116,23 +120,53 @@ function Footer() {
     setRefundDialogOpen(false);
   };
 
+  const validateEmail = (email) => {
+    // Regex pattern for email validation
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
   const handleNewsletterSubmit = async (event) => {
     event.preventDefault();
-    console.log("Name:", newsletterName);
-    console.log("Email:", newsletterEmail);
 
-    try {
-      await axiosInstance.post("/app/subscribe", {
-        master_reseller_id: "626f85e0544a264104223e37",
-        name: newsletterName,
-        email: newsletterEmail,
-      });
-      setNewsletterMessage("Subscription successful!");
+    // Validate inputs
+    let errors = {
+      name: "",
+      email: "",
+    };
 
-      setNewsletterName("");
-      setNewsletterEmail("");
-    } catch (error) {
-      setNewsletterMessage("Subscription failed. Please try again.");
+    if (!newsletterName.trim()) {
+      errors.name = "Name is required";
+    }
+
+    if (!newsletterEmail.trim()) {
+      errors.email = "Email is required";
+    } else if (!validateEmail(newsletterEmail)) {
+      errors.email = "Email is invalid";
+    }
+
+    if (errors.name || errors.email) {
+      setValidationErrors(errors);
+      setNewsletterMessage("");
+    } else {
+      try {
+        await axiosInstance.post("/app/subscribe", {
+          master_reseller_id: "626f85e0544a264104223e37",
+          name: newsletterName,
+          email: newsletterEmail,
+        });
+        setNewsletterMessage("Subscription successful!");
+
+        // Clear form fields after successful submission
+        setNewsletterName("");
+        setNewsletterEmail("");
+        setValidationErrors({
+          name: "",
+          email: "",
+        });
+      } catch (error) {
+        setNewsletterMessage("Subscription failed. Please try again.");
+      }
     }
   };
 
@@ -337,20 +371,24 @@ function Footer() {
                 >
                   <TextField
                     variant="standard"
-                    color="black"
+                    color={validationErrors.name ? "error" : "black"}
                     label="Enter your Name"
                     value={newsletterName}
                     onChange={(e) => setNewsletterName(e.target.value)}
+                    error={!!validationErrors.name}
+                    helperText={validationErrors.name}
                     sx={{
                       width: { md: "100%", sm: "250px", xs: "250px" },
                     }}
                   />
                   <TextField
                     variant="standard"
-                    color="black"
+                    color={validationErrors.email ? "error" : "black"}
                     label="Enter your email"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
+                    error={!!validationErrors.email}
+                    helperText={validationErrors.email}
                     sx={{ width: { md: "100%", sm: "250px", xs: "250px" } }}
                   />
                   <Box
