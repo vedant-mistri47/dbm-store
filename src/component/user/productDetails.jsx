@@ -181,16 +181,34 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
 
   return (
     <Box sx={{ width: { xs: 250, md: 350 }, p: 2 }}>
-      <Grid container alignItems="center" justifyContent="space-between" mb={3}>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{cursor:'pointer'}} mb={3}>
         <NavigateBeforeRoundedIcon
           fontSize="large"
-          sx={{ cursor: "pointer" }}
+          // sx={{ cursor: "pointer" }}
           onClick={onClose}
+          sx={{cursor:'pointer'}} 
         />
         <Typography fontWeight={600}>Product Detail</Typography>
         {cartDrawer}
       </Grid>
 
+   
+
+      <Grid container my={5}>
+        <Grid
+          item
+          xs={12}
+          sx={{ borderRadius: 2, backgroundColor: "#eee", textAlign: "center" }}
+        >
+          <img width="60%" src={productData.image} alt="Product" />
+        <Checkbox
+          onChange={handleWishlist}
+          checked={isProductInWishlist}
+          icon={<FavoriteBorder />}
+          checkedIcon={<Favorite />}
+        />
+        </Grid>
+      </Grid>
       <Box>
         <Badge badgeContent="NEW" color="primary" sx={{ ml: 2 }} />
         <Grid container alignItems="flex-end" spacing={2}>
@@ -204,29 +222,15 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
             </Grid>
           </Grid>
           <Grid container item xs={4} justifyContent="center" alignItems='center'>
-            <Typography color='khaki' my={1}> price :  </Typography>
-            <Typography fontWeight='bold'>
+            <Typography color='khaki' my={1}> price :  
+            {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
+               </Typography> 
+            {/* <Typography fontWeight='bold'>
               {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
-            </Typography>
+            </Typography> */}
           </Grid>
         </Grid>
       </Box>
-
-      <Grid container my={5}>
-        <Grid
-          item
-          xs={12}
-          sx={{ borderRadius: 2, backgroundColor: "#eee", textAlign: "center" }}
-        >
-          <img width="80%" src={productData.image} alt="Product" />
-          <Checkbox
-            onChange={handleWishlist}
-            checked={isProductInWishlist}
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite />}
-          />
-        </Grid>
-      </Grid>
 
       <Box sx={{ my: 5 }}>
         <Typography fontWeight="bold">Descriptions</Typography>
