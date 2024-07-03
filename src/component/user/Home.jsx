@@ -379,8 +379,9 @@ const Home = () => {
             <Grid
               item
               xs={12}
-              lg ={6}
+              md={6}
               sx={{
+                // width:'fit-content',
                 display: "flex",
                 justifyContent: "center",
               }}
@@ -396,7 +397,7 @@ const Home = () => {
                   src={image1}
                   alt="Marketing Team"
                   sx={{
-                    width: { xs: "250px", md: "500px" },
+                    width: { xs: "270px", md: "480px" },
                     borderRadius: 2,
                     transform: "rotate(0deg)",
                     display: "block",
@@ -405,10 +406,15 @@ const Home = () => {
                 />
                 <Box
                   sx={{
+                    // position: "relative",
+
                     position: "absolute",
-                    bottom: { xs: "50px", md: "58px" },
-                    left: { xs: "-40px", md: "40px" },
+                    // top: "50%",
+                    bottom: { xs: "10px", md: "58px" },
+                    left: { xs: "-20px", md: "40px" },
+                    // left: "10%",
                     mt: { xs: -5, md: -4 },
+
                     display: "flex",
                     justifyContent: "center",
                     flexDirection: "column",
@@ -416,9 +422,9 @@ const Home = () => {
                   }}
                 >
                   <Box
+                    // variant="contained"
                     color="white"
                     sx={{
-                      
                       backgroundColor: "#fff",
                       color: "black",
                       marginBottom: "15px",
@@ -428,6 +434,7 @@ const Home = () => {
                       justifyContent: "center",
                       whiteSpace: "nowrap",
                       borderRadius: "8px",
+                      fontFamily: "",
                       boxShadow: "0.5px 0.5px 5.5px",
                       transform: {
                         xs: "rotate(-5deg)",
@@ -438,13 +445,11 @@ const Home = () => {
                       fontSize: { xs: "10px", md: "20px" },
                     }}
                   >
-                  <Typography  variant="body1">
-                    
-                     Easy use
-                    </Typography>  
+                    Easy use
                   </Box>
 
                   <Box
+                    // variant="contained"
                     sx={{
                       backgroundColor: "#0084FE",
                       color: "#fff",
@@ -455,6 +460,10 @@ const Home = () => {
                       justifyContent: "center",
                       whiteSpace: "nowrap",
                       borderRadius: "8px",
+                      fontFamily: "",
+
+                      // bottom: { xs: "20px", md: "80px" },
+                      // right: { xs: "220px", md: "340px" },
                       transform: {
                         xs: "rotate(5deg)",
                         md: "translateX(-50%) rotate(5deg)",
@@ -464,10 +473,7 @@ const Home = () => {
                       fontSize: { xs: "10px", md: "20px" },
                     }}
                   >
-                    <Typography variant="body1" >
-
                     Powerful
-                    </Typography>
                   </Box>
                 </Box>
               </Box>

@@ -45,7 +45,9 @@ function Footer() {
       behavior: "smooth",
     });
   };
+
   const isLargeDevice = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
   const checkScrollTop = () => {
     if (!showScroll && window.pageYOffset > 400) {
       setShowScroll(true);
@@ -53,18 +55,22 @@ function Footer() {
       setShowScroll(false);
     }
   };
+
   useEffect(() => {
     window.addEventListener("scroll", checkScrollTop);
     return () => {
       window.removeEventListener("scroll", checkScrollTop);
     };
   }, [showScroll]);
+
   const handleEmailClick = () => {
     window.location.href = "mailto:info@digibulkmarketing.com";
   };
+
   const handlePhoneClick = () => {
     window.location.href = "tel:18008898358";
   };
+
   const handleTermsDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/terms-conditions");
@@ -76,9 +82,11 @@ function Footer() {
     }
     setTermsDialogOpen(true);
   };
+
   const handleTermsDialogClose = () => {
     setTermsDialogOpen(false);
   };
+
   const handlePrivacyDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/privacy-policy");
@@ -90,9 +98,11 @@ function Footer() {
     }
     setPrivacyDialogOpen(true);
   };
+
   const handlePrivacyDialogClose = () => {
     setPrivacyDialogOpen(false);
   };
+
   const handleRefundDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/refund-policy");
@@ -104,6 +114,7 @@ function Footer() {
     }
     setRefundDialogOpen(true);
   };
+
   const handleRefundDialogClose = () => {
     setRefundDialogOpen(false);
   };
