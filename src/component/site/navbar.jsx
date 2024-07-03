@@ -42,6 +42,7 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/auth/authSlice";
 import ProductDetails from "../user/productDetails";
 import Header from "../user/Header";
+import { Image } from "../../../lib";
 
 const pages = [
   { id: "#home", name: "HOME" },
@@ -62,6 +63,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userDetails = useSelector((state) => state.auth.detail);
   const [wishlist, setWishlist] = useState(false);
   const [activePage, setActivePage] = useState("#home");
   const cartItemCount = useSelector((state) => state.cart.items.length);
@@ -269,7 +271,7 @@ const Navbar = () => {
                 >
                   <Avatar
                     alt="Profile Picture"
-                    src={profilePicture}
+                    src={Image(userDetails.profile)}
                     sx={{ width: 35, height: 35 }}
                   />
                 </IconButton>
@@ -427,7 +429,7 @@ const Navbar = () => {
                 data-item="Name"
                 sx={{ fontSize: "10px" }}
               >
-                Name
+                {userDetails.name}
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleOpenModal} data-item="Profile">
