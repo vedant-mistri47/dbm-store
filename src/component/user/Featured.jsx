@@ -202,34 +202,78 @@ const Featured = () => {
           </Box>
           sellers
         </Typography>
-        <Grid container sx={{justifyContent: { md:"space-between" , sm:'center' ,  xs:'center'}, alignItems: 'center' }}  display={'flex'}>
-      {products.map((product, index) => (
-        <Grid item key={index} xs={12} sm={6} md={4}>
-          <StyledBadge
-            badgeContent={`${product.discount} Off`}
-            transform={transformations[index % transformations.length]}
-          >
-            <Card sx={{ borderRadius: "15px", p: 2, position: 'relative', maxWidth: 300, m: 2 }}>
-              <Grid container justifyContent="center" alignItems="center">
-                <Grid item xs={12} sx={{ borderRadius: "15px", backgroundColor: "#FBF5EC", textAlign: 'center' }}>
-                  <img width={200} height={200} src={product.image} alt={product.title} />
-                </Grid>
-                <Grid container item xs={12} justifyContent='space-between' my={3}>
-                  <Grid item xs={8}>
-                    <Typography variant='h5' fontWeight={600}>{product.title}</Typography>
-                    <Typography sx={{ color: '#818181de' }}>{product.description}</Typography>
-                  </Grid>
-                  <Grid item xs={4} textAlign='right'>
-                    <Typography sx={{ color: '#818181de' }}>Price</Typography>
-                    <Typography variant='h5' fontWeight={600}>{product.price}</Typography>
-                  </Grid>
-                </Grid>
+        <Grid
+  container
+  sx={{
+    justifyContent: {
+      md: 'space-between',
+      sm: 'center',
+      xs: 'center'
+    },
+    alignItems: 'center'
+  }}
+  display='flex'
+>
+  {products.map((product, index) => (
+    <Grid item key={index} xs={12} sm={6} md={4} display='flex' justifyContent='center'>
+      <StyledBadge
+        badgeContent={`${product.discount} Off`}
+        transform={transformations[index % transformations.length]}
+      >
+        <Card
+          sx={{
+            borderRadius: '15px',
+            p: 2,
+            position: 'relative',
+            maxWidth: 300,
+            m: 2
+          }}
+        >
+          <Grid container justifyContent='center' alignItems='center'>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                borderRadius: '15px',
+                backgroundColor: '#FBF5EC',
+                textAlign: 'center'
+              }}
+            >
+              <img
+                width={200}
+                height={200}
+                src={product.image}
+                alt={product.title}
+              />
+            </Grid>
+            <Grid
+              container
+              item
+              xs={12}
+              justifyContent='space-between'
+              my={3}
+            >
+              <Grid item xs={8}>
+                <Typography variant='h5' fontWeight={600}>
+                  {product.title}
+                </Typography>
+                <Typography sx={{ color: '#818181de' }}>
+                  {product.description}
+                </Typography>
               </Grid>
-            </Card>
-          </StyledBadge>
-        </Grid>
-      ))}
+              <Grid item xs={4} textAlign='right'>
+                <Typography sx={{ color: '#818181de' }}>Price</Typography>
+                <Typography variant='h5' fontWeight={600}>
+                  {product.price}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Card>
+      </StyledBadge>
     </Grid>
+  ))}
+</Grid>
       </Container>
     </Box>
   )

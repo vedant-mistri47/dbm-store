@@ -651,7 +651,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <MailIcon fontSize="large" />
@@ -678,7 +678,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <ImportContactsIcon fontSize="large" />
@@ -704,7 +704,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <PersonAddIcon fontSize="large" />
@@ -730,7 +730,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <AccountCircleIcon fontSize="large" />
@@ -756,7 +756,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <ChatIcon fontSize="large" />
@@ -782,7 +782,8 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",                             
+
                                }}
                              >
                                <ReportIcon fontSize="large" />
@@ -806,7 +807,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <MailIcon fontSize="large" />
@@ -912,6 +913,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
+                                 marginBottom: "15px",
                                }}
                              >
                                <LaptopWindowsIcon fontSize="large" />
@@ -937,7 +939,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <PhoneAndroidOutlinedIcon fontSize="large" />
@@ -963,7 +965,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <CameraAltIcon fontSize="large" />
@@ -989,7 +991,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <LiveTvIcon fontSize="large" />
@@ -1015,7 +1017,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <CreditCardIcon fontSize="large" />
@@ -1041,7 +1043,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <SpeakerIcon fontSize="large" />
@@ -1065,7 +1067,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <SportsEsportsIcon fontSize="large" />
@@ -1171,7 +1173,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <LaptopWindowsIcon fontSize="large" />
@@ -1197,7 +1199,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <PhoneAndroidOutlinedIcon fontSize="large" />
@@ -1223,7 +1225,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <CameraAltIcon fontSize="large" />
@@ -1249,7 +1251,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <LiveTvIcon fontSize="large" />
@@ -1275,7 +1277,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <CreditCardIcon fontSize="large" />
@@ -1301,7 +1303,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <SpeakerIcon fontSize="large" />
@@ -1325,7 +1327,7 @@ const Home = () => {
                                  display: "flex",
                                  justifyContent: "center",
                                  alignItems: "center",
-                                 marginBottom: "10px",
+                                 marginBottom: "15px",
                                }}
                              >
                                <SportsEsportsIcon fontSize="large" />

@@ -13,16 +13,16 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Divider,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import img from "../image/logo (1).png";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
-
 function Footer() {
   const [showScroll, setShowScroll] = useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
@@ -32,16 +32,20 @@ function Footer() {
   const [termsContent, setTermsContent] = useState(null);
   const [refundContent, setRefundContent] = useState(null);
   const [error, setError] = useState(null);
-  const [storeData, setStoreData] = useState(null); 
+  const [newsletterName, setNewsletterName] = useState("");
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [validationErrors, setValidationErrors] = useState({
+    name: "",
+    email: "",
+  });
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
-
   const isLargeDevice = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
   const checkScrollTop = () => {
     if (!showScroll && window.pageYOffset > 400) {
       setShowScroll(true);
@@ -49,36 +53,18 @@ function Footer() {
       setShowScroll(false);
     }
   };
-
   useEffect(() => {
     window.addEventListener("scroll", checkScrollTop);
     return () => {
       window.removeEventListener("scroll", checkScrollTop);
     };
   }, [showScroll]);
-
-  // Fetch store data from the API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
-        setStoreData(response.data.storeSettings); 
-        setError(null);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-    fetchData();
-  }, []);
-
   const handleEmailClick = () => {
-    window.location.href = `mailto:${storeData?.email}`;
+    window.location.href = "mailto:info@digibulkmarketing.com";
   };
-
   const handlePhoneClick = () => {
-    window.location.href = `tel:${storeData?.phone}`;
+    window.location.href = "tel:18008898358";
   };
-
   const handleTermsDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/terms-conditions");
@@ -90,11 +76,9 @@ function Footer() {
     }
     setTermsDialogOpen(true);
   };
-
   const handleTermsDialogClose = () => {
     setTermsDialogOpen(false);
   };
-
   const handlePrivacyDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/privacy-policy");
@@ -106,11 +90,9 @@ function Footer() {
     }
     setPrivacyDialogOpen(true);
   };
-
   const handlePrivacyDialogClose = () => {
     setPrivacyDialogOpen(false);
   };
-
   const handleRefundDialogOpen = async () => {
     try {
       const response = await axiosInstance.get("user/page/refund-policy");
@@ -122,9 +104,51 @@ function Footer() {
     }
     setRefundDialogOpen(true);
   };
-
   const handleRefundDialogClose = () => {
     setRefundDialogOpen(false);
+  };
+  const validateEmail = (email) => {
+    // Regex pattern for email validation
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+  const handleNewsletterSubmit = async (event) => {
+    event.preventDefault();
+    // Validate inputs
+    let errors = {
+      name: "",
+      email: "",
+    };
+    if (!newsletterName.trim()) {
+      errors.name = "Name is required";
+    }
+    if (!newsletterEmail.trim()) {
+      errors.email = "Email is required";
+    } else if (!validateEmail(newsletterEmail)) {
+      errors.email = "Email is invalid";
+    }
+    if (errors.name || errors.email) {
+      setValidationErrors(errors);
+      setNewsletterMessage("");
+    } else {
+      try {
+        await axiosInstance.post("/app/subscribe", {
+          master_reseller_id: "626f85e0544a264104223e37",
+          name: newsletterName,
+          email: newsletterEmail,
+        });
+        setNewsletterMessage("Subscription successful!");
+        // Clear form fields after successful submission
+        setNewsletterName("");
+        setNewsletterEmail("");
+        setValidationErrors({
+          name: "",
+          email: "",
+        });
+      } catch (error) {
+        setNewsletterMessage("Subscription failed. Please try again.");
+      }
+    }
   };
 
   return (
@@ -151,14 +175,15 @@ function Footer() {
                 textAlign="center"
               >
                 <img
-                  src={`https://api.digibulkmarketing.com${storeData?.logo || "/media/logo/logo.png"}`}
+                  src={img}
                   alt="Logo"
                   style={{ height: "70px", marginBottom: "20px" }}
                 />
                 <Box textAlign={{ xs: "center", sm: "left" }}>
                   <Typography sx={{ color: "black" }}>
-                    <strong>Address:</strong> {storeData?.address}
+                    <strong>Address:</strong> B204, Sumel Business Park – 7,
                   </Typography>
+                  <Typography>Odhav, Ahmedabad – 382415</Typography>
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -169,13 +194,13 @@ function Footer() {
                       onClick={handleEmailClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Email:</strong> {storeData?.email}
+                      <strong>Email:</strong> info@digibulkmarketing.com
                     </Typography>
                     <Typography
                       onClick={handlePhoneClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Phone:</strong> {storeData?.phone}
+                      <strong>Phone:</strong> 1800-889-8358
                     </Typography>
                   </Box>
                 </Box>
@@ -195,80 +220,51 @@ function Footer() {
                       gap: "10px",
                     }}
                   >
-                    {storeData?.socialMedia.facebook && (
-                      <a href={storeData.socialMedia.facebook} target="_blank" rel="noopener noreferrer"  color="#000" >
-                        <FacebookIcon
-                          sx={{
-                            backgroundColor: "lightblue",
-                            borderRadius: "50%",
-                            padding: "8px",
-                            cursor: "pointer",
-                            color:'#000'
-
-                          }}
-                        />
-                      </a>
-                    )}
-                    {storeData?.socialMedia.twitter && (
-                      <a href={storeData.socialMedia.twitter} target="_blank" rel="noopener noreferrer">
-                        <XIcon
-                          sx={{
-                            backgroundColor: "lightblue",
-                            borderRadius: "50%",
-                            padding: "8px",
-                            cursor: "pointer",
-                            color:'#000'
-
-                          }}
-                        />
-                      </a>
-                    )}
-                    {storeData?.socialMedia.youtube && (
-                      <a href={storeData.socialMedia.youtube} target="_blank" rel="noopener noreferrer">
-                        <YouTubeIcon
-                          sx={{
-                            backgroundColor: "lightblue",
-                            borderRadius: "50%",
-                            padding: "8px",
-                            cursor: "pointer",
-                            color:'#000'
-
-                          }}
-                        />
-                      </a>
-                    )}
-                    {storeData?.socialMedia.google && (
-                      <a href={storeData.socialMedia.google} target="_blank" rel="noopener noreferrer">
-                        <GoogleIcon
-                          sx={{
-                            backgroundColor: "lightblue",
-                            borderRadius: "50%",
-                            padding: "8px",
-                            cursor: "pointer",
-                            color:'#000'
-
-                          }}
-                        />
-                      </a>
-                    )}
-                    {storeData?.socialMedia.instagram && (
-                      <a href={storeData.socialMedia.instagram} target="_blank" rel="noopener noreferrer">
-                        <InstagramIcon
-                          sx={{
-                            backgroundColor: "lightblue",
-                            borderRadius: "50%",
-                            padding: "8px",
-                            cursor: "pointer",
-                            color:'#000'
-
-                          }}
-                        />
-                      </a>
-                    )}
+                    <FacebookIcon
+                      sx={{
+                        backgroundColor: "lightblue",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <XIcon
+                      sx={{
+                        backgroundColor: "lightblue",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <YouTubeIcon
+                      sx={{
+                        backgroundColor: "lightblue",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <GoogleIcon
+                      sx={{
+                        backgroundColor: "lightblue",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <InstagramIcon
+                      sx={{
+                        backgroundColor: "lightblue",
+                        borderRadius: "50%",
+                        padding: "8px",
+                        cursor: "pointer",
+                      }}
+                    />
                   </Box>
                 </Box>
               </Box>
             </Grid>
+
             {/* About Us and Useful Links */}
             <Grid item xs={12} md={4}>
               <Grid container spacing={2} justifyContent="space-around">
@@ -347,19 +343,34 @@ function Footer() {
                 mt={{ xs: 0, sm: 4 }}
               >
                 <Typography fontWeight={600}>NEWSLETTER</Typography>
-                <Stack spacing={2} mt={3} width="100%" alignItems="center">
+                <Stack
+                  spacing={2}
+                  mt={3}
+                  width="100%"
+                  alignItems="center"
+                  component="form"
+                  onSubmit={handleNewsletterSubmit}
+                >
                   <TextField
                     variant="standard"
-                    color="black"
+                    color={validationErrors.name ? "error" : "black"}
                     label="Enter your Name"
+                    value={newsletterName}
+                    onChange={(e) => setNewsletterName(e.target.value)}
+                    error={!!validationErrors.name}
+                    helperText={validationErrors.name}
                     sx={{
                       width: { md: "100%", sm: "250px", xs: "250px" },
                     }}
                   />
                   <TextField
                     variant="standard"
-                    color="black"
+                    color={validationErrors.email ? "error" : "black"}
                     label="Enter your email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    error={!!validationErrors.email}
+                    helperText={validationErrors.email}
                     sx={{ width: { md: "100%", sm: "250px", xs: "250px" } }}
                   />
                   <Box
@@ -387,6 +398,9 @@ function Footer() {
                       SUBSCRIBE
                     </Button>
                   </Box>
+                  {newsletterMessage && (
+                    <Typography>{newsletterMessage}</Typography>
+                  )}
                 </Stack>
               </Box>
             </Grid>
@@ -418,13 +432,13 @@ function Footer() {
         </Box>
       )}
 
-      <Box sx={{ backgroundColor: "#8C8C8C" }} padding="20px 0">
+      <Box sx={{ backgroundColor: "#fff" , boxShadow:20}} padding="20px 0">
         <Container>
           <Grid container display="flex">
             <Grid item xs={12} md={5}>
               <Typography
                 fontSize="14px"
-                sx={{ color: "#fff", alignItems: "center" }}
+                sx={{ color: "#000", alignItems: "center" }}
               >
                 Copyright © Designed & Developed by BITBEAST Pvt. Ltd. 2024
               </Typography>
@@ -437,30 +451,31 @@ function Footer() {
                   flexDirection: { xs: "column", sm: "row" },
                   alignItems: "center",
                   justifyContent: "space-between",
+                  color:'#000'
                 }}
               >
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handlePrivacyDialogOpen}
                 >
                   Privacy Policy
                 </Typography>
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handleTermsDialogOpen}
                 >
                   Terms and Conditions
                 </Typography>
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handleRefundDialogOpen}
                 >
                   Refund and Return Policy
                 </Typography>
-                <Typography sx={{ color: "#fff", cursor: "pointer" }}>
+                <Typography sx={{ color: "#000", cursor: "pointer" }}>
                   Contact
                 </Typography>
-                <Typography sx={{ color: "#fff", cursor: "pointer" }}>
+                <Typography sx={{ color: "#000", cursor: "pointer" }}>
                   About
                 </Typography>
               </Box>
@@ -469,7 +484,10 @@ function Footer() {
         </Container>
       </Box>
 
-      <Dialog open={privacyDialogOpen} onClose={handlePrivacyDialogClose}>
+      <Dialog
+        open={privacyDialogOpen}
+        onClose={() => handlePrivacyDialogClose()}
+      >
         <DialogTitle>{"Privacy Policy"}</DialogTitle>
         <DialogContent>
           {privacyContent ? (
@@ -479,13 +497,13 @@ function Footer() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handlePrivacyDialogClose} color="primary">
+          <Button onClick={() => handlePrivacyDialogClose()} color="primary">
             Close
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={termsDialogOpen} onClose={handleTermsDialogClose}>
+      <Dialog open={termsDialogOpen} onClose={() => handleTermsDialogClose()}>
         <DialogTitle>{"Terms and Conditions"}</DialogTitle>
         <DialogContent>
           {termsContent ? (
@@ -495,13 +513,13 @@ function Footer() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleTermsDialogClose} color="primary">
+          <Button onClick={() => handleTermsDialogClose()} color="primary">
             Close
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={refundDialogOpen} onClose={handleRefundDialogClose}>
+      <Dialog open={refundDialogOpen} onClose={() => handleRefundDialogClose()}>
         <DialogTitle>{"Refund and Return Policy"}</DialogTitle>
         <DialogContent>
           {refundContent ? (
@@ -511,7 +529,7 @@ function Footer() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleRefundDialogClose} color="primary">
+          <Button onClick={() => handleRefundDialogClose()} color="primary">
             Close
           </Button>
         </DialogActions>
