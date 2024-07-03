@@ -711,6 +711,7 @@ const Shop = () => {
         <ProductDetails
           onClose={toggleDetailDrawer(false)}
           product={drawerProduct}
+          onClick={toggleCartDrawer(true)}
           cartDrawer={
             <Badge badgeContent={cartItemCount} color="primary">
               <Box

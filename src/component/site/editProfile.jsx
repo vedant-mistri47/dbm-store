@@ -43,7 +43,6 @@ const EditProfile = ({ onClose }) => {
   const dispatch = useDispatch()
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePictureFile, setProfilePictureFile] = useState(null);
-  console.log("profilePictureFile", profilePictureFile);
   const [errors, setErrors] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -71,7 +70,7 @@ const EditProfile = ({ onClose }) => {
           phone: userProfile.phone || "",
         });
         setProfilePicture(
-          userProfile.profile ? Image(userProfile.profile) : null
+          userProfile.profile && Image(userProfile.profile)
         );
       }
     } catch (error) {
@@ -92,7 +91,6 @@ const EditProfile = ({ onClose }) => {
       }
       const fileUrl = URL.createObjectURL(file);
       setProfilePictureFile(file);
-      console.log("fileUrl :", fileUrl);
       setProfilePicture(fileUrl);
     }
   };
@@ -141,7 +139,6 @@ const EditProfile = ({ onClose }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("data.downloadUrl", data.downloadUrl);
       return data.downloadUrl;
     } catch (error) {
       console.error("Error uploading profile picture", error);
@@ -161,12 +158,11 @@ const EditProfile = ({ onClose }) => {
         state: profile.state,
         zip: profile.zip,
       },
-      profile: profilePictureUrl || profilePicture || "",
+      profile: profilePictureUrl,
     };
     
     try {
       const { data } = await axiosInstance.post("auth/set-profile", formData);
-      console.log("Profile updated successfully", data , "form data" , formData);
       dispatch(setUserDetail(formData))
       onClose();
     } catch (error) {
