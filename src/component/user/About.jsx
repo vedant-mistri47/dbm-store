@@ -81,7 +81,6 @@ const About = () => {
               >
                 {index === 0 && (
                   <Button
-                  
                     variant="contained"
                     color="primary"
                     href="https://anydesk.com/en/downloads/windows"
@@ -221,7 +220,6 @@ const About = () => {
           ))}
         </Grid>
       </Card>
-
     </Container>
   );
 };

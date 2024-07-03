@@ -9,10 +9,10 @@ import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import {
   Box,
   Container,
-  Typography,
   FormControl,
   Select,
   MenuItem,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -119,29 +119,45 @@ const Header = () => {
           {/* Box for Email and Phone */}
           <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
             {/* Email */}
-            <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+            <Typography
+              component="a"
+              href="mailto:info@digibulkmarketing.com"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                color: "#fff",
+                textDecoration: "none",
+                marginRight: "10px",
+              }}
+              onClick={handleEmailClick}
+            >
               <EmailIcon
-                sx={{ cursor: "pointer", fontSize: "medium", color: "#fff" }}
+                sx={{ fontSize: "medium", color: "#fff", marginLeft: "4px" }}
               />
-              <Typography
-                onClick={handleEmailClick}
-                sx={{ cursor: "pointer", color: "#fff", ml: 1 }}
-              >
+              <span style={{ marginLeft: "5px" }}>
                 info@digibulkmarketing.com
-              </Typography>
-            </Box>
+              </span>
+            </Typography>
             {/* Phone */}
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              component="a"
+              href="tel:18008898358"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                color: "#fff",
+                textDecoration: "none",
+                marginLeft: "20px",
+              }}
+              onClick={handlePhoneClick}
+            >
               <CallIcon
-                sx={{ cursor: "pointer", fontSize: "medium", color: "#fff" }}
+                sx={{ fontSize: "medium", color: "#fff", marginLeft: "-17px" }}
               />
-              <Typography
-                onClick={handlePhoneClick}
-                sx={{ cursor: "pointer", color: "#fff", ml: 1 }}
-              >
-                1800-889-8358
-              </Typography>
-            </Box>
+              <span style={{ marginLeft: "5px" }}>1800-889-8358</span>
+            </Typography>
           </Box>
 
           {(isExpanded || (!isSmallScreen && !isXSmallScreen)) && (
@@ -166,6 +182,7 @@ const Header = () => {
                     ".MuiSelect-icon": { color: "#fff" },
                     ".MuiInputBase-input": { color: "#fff", cursor: "pointer" },
                     cursor: "pointer",
+                    marginLeft: "4px",
                   }}
                 >
                   {CURRENCIES?.map((currency, index) => (
@@ -176,13 +193,20 @@ const Header = () => {
                 </Select>
               </FormControl>
               {socialMediaIcons.map((social, index) => (
-                <Box
+                <a
                   key={index}
-                  onClick={() => window.open(social.link, "_blank")}
-                  sx={{ cursor: "pointer", color: "#fff" }}
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    cursor: "pointer",
+                    color: "#fff",
+                    textDecoration: "none",
+                    marginRight: "5px",
+                  }}
                 >
                   {social.icon}
-                </Box>
+                </a>
               ))}
             </Box>
           )}
