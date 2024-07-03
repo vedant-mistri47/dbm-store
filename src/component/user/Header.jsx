@@ -12,6 +12,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -118,7 +119,8 @@ const Header = () => {
           {/* Box for Email and Phone */}
           <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
             {/* Email */}
-            <a
+            <Typography
+              component="a"
               href="mailto:info@digibulkmarketing.com"
               style={{
                 display: "flex",
@@ -128,17 +130,18 @@ const Header = () => {
                 textDecoration: "none",
                 marginRight: "10px",
               }}
+              onClick={handleEmailClick}
             >
-              <EmailIcon sx={{ fontSize: "medium", color: "#fff",marginLeft:"4px" }} />
-              <span
-                onClick={handleEmailClick}
-                style={{ cursor: "pointer", color: "#fff", marginLeft: "5px" }}
-              >
+              <EmailIcon
+                sx={{ fontSize: "medium", color: "#fff", marginLeft: "4px" }}
+              />
+              <span style={{ marginLeft: "5px" }}>
                 info@digibulkmarketing.com
               </span>
-            </a>
+            </Typography>
             {/* Phone */}
-            <a
+            <Typography
+              component="a"
               href="tel:18008898358"
               style={{
                 display: "flex",
@@ -148,15 +151,13 @@ const Header = () => {
                 textDecoration: "none",
                 marginLeft: "20px",
               }}
+              onClick={handlePhoneClick}
             >
-              <CallIcon sx={{ fontSize: "medium", color: "#fff",marginLeft:"-17px" }} />
-              <span
-                onClick={handlePhoneClick}
-                style={{ cursor: "pointer", color: "#fff", marginLeft: "5px" }}
-              >
-                1800-889-8358
-              </span>
-            </a>
+              <CallIcon
+                sx={{ fontSize: "medium", color: "#fff", marginLeft: "-17px" }}
+              />
+              <span style={{ marginLeft: "5px" }}>1800-889-8358</span>
+            </Typography>
           </Box>
 
           {(isExpanded || (!isSmallScreen && !isXSmallScreen)) && (
@@ -181,7 +182,7 @@ const Header = () => {
                     ".MuiSelect-icon": { color: "#fff" },
                     ".MuiInputBase-input": { color: "#fff", cursor: "pointer" },
                     cursor: "pointer",
-                    marginLeft:"4px"
+                    marginLeft: "4px",
                   }}
                 >
                   {CURRENCIES?.map((currency, index) => (
