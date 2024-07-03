@@ -34,7 +34,7 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-const ProductDetails = ({ onClose, product, cartDrawer }) => {
+const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
   const productData = product?.product;
   const [expanded, setExpanded] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState(product?.variation ?? productData?.rates[0]);
@@ -309,13 +309,13 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
         color="black"
         sx={{ color: "#fff", borderRadius: 2, p: 1 }}
         fullWidth
-        disabled={isInCart() > 0}
-        onClick={addToCartHandler}
+        // disabled={isInCart() > 0}
+        onClick={isInCart() > 0 ? onClick : addToCartHandler}
       >
         {loading ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
-          "Add to Cart"
+          isInCart() > 0 ? "Go to cart" : "Add to Cart"
         )}
       </Button>
 
