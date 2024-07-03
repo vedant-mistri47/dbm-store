@@ -60,18 +60,15 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openOrder, setOpenOrder] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userDetails = useSelector((state) => state.auth.detail);
+  console.log("userDetails", userDetails);
   const [wishlist, setWishlist] = useState(false);
   const [activePage, setActivePage] = useState("#home");
   const cartItemCount = useSelector((state) => state.cart.items.length);
   const wishlistItemCount = useSelector((state) => state.wishlist.items.length);
   const drawerProduct = useSelector((state) => state.cart.selectedProduct);
-  const [profilePicture, setProfilePicture] = useState(
-    "/static/images/avatar/2.jpg"
-  );
   const [details, setDetails] = useState(false);
   const dispatch = useDispatch();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -271,7 +268,7 @@ const Navbar = () => {
                 >
                   <Avatar
                     alt="Profile Picture"
-                    src={Image(userDetails.profile)}
+                    src={Image(userDetails?.profile)}
                     sx={{ width: 35, height: 35 }}
                   />
                 </IconButton>
@@ -429,7 +426,7 @@ const Navbar = () => {
                 data-item="Name"
                 sx={{ fontSize: "10px" }}
               >
-                {userDetails.name}
+                {userDetails?.name}
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleOpenModal} data-item="Profile">
