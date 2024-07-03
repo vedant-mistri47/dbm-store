@@ -6,6 +6,8 @@ import {
   Button,
   Typography,
   TextField,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -39,6 +41,8 @@ const EditProfile = ({ onClose }) => {
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   console.log("profilePictureFile", profilePictureFile);
   const [errors, setErrors] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     getProfile();
@@ -118,6 +122,7 @@ const EditProfile = ({ onClose }) => {
     }
     return errors;
   };
+  
 
   const uploadProfilePicture = async () => {
     if (!profilePictureFile) return null;
@@ -172,6 +177,13 @@ const EditProfile = ({ onClose }) => {
       const profilePictureUrl = await uploadProfilePicture();
       await updateProfile(profilePictureUrl);
     }
+    setSnackbarOpen(false);
+  };
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
   };
 
   return (
@@ -342,6 +354,17 @@ const EditProfile = ({ onClose }) => {
           </Grid>
         </Grid>
       </Grid>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          sx={{ backgroundColor: '#0084fe', color: '#fff' }}
+        />
+      </Snackbar>
     </Box>
   );
 };

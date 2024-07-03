@@ -14,6 +14,7 @@ export const paymentSlice = createSlice({
             state.productDetails = action.payload
         },
         setPayment: (state , action) => {
+            
         }
     },
 });

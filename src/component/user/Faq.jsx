@@ -122,7 +122,7 @@ const Faq = () => {
         });
         // Assuming your API returns an array of FAQ objects in response.data
         setFaqData(response.data.product.faqs);
-        console.log(("response data is : ", response.data));
+        // console.log(("response data is : ", response.data));
       } catch (error) {
         console.error("Error fetching FAQ data:", error);
         // Handle error states as needed

@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, Modal, Typography } from '@mui/material';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import React, { useState } from "react";
 import {
@@ -12,27 +12,12 @@ import "react-phone-input-2/lib/style.css";
 import Paypal from '../image/paypal.png';
 import razorpay from '../image/razorpay.png';
 import Stripe from '../image/stripe.png';
+import country from '../../countryList.json';
 import { setUserDetail } from '../../redux/payment/paymentSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../../util/axiosInstance';
-
-const paymentGateway = [
-    {
-        name: "RazorPay",
-        value: "razorpay",
-        logo: razorpay,
-    },
-    {
-        name: "Stripe",
-        value: "stripe",
-        logo: Stripe,
-    },
-    {
-        name: "PayPal",
-        value: "paypal",
-        logo: Paypal,
-    }
-];
+import { CURRENCIES_SYMBOL } from '../currency/currency';
+import countrys  from '../../countryList.json' 
 
 const Checkout = ({ onClose }) => {
     const [name, setName] = useState("");
@@ -48,9 +33,10 @@ const Checkout = ({ onClose }) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('razorpay');
     const userDetails = useSelector(state => state.payment.userDetails);
     const products = useSelector(state => state.payment.productDetails);
-
+    const subtotal = useSelector(state => state.cart.subtotal);
+    const { currency, exchangeRates } = useSelector((state) => state.currency);
+    const currencySymbol = CURRENCIES_SYMBOL[currency]
     const dispatch = useDispatch();
-
     const [errors, setErrors] = useState({
         name: '',
         email: '',
@@ -61,7 +47,6 @@ const Checkout = ({ onClose }) => {
         country: '',
         zip: ''
     });
-
     const validateForm = () => {
         let valid = true;
         const newErrors = {
@@ -74,7 +59,6 @@ const Checkout = ({ onClose }) => {
             country: '',
             zip: ''
         };
-
         if (!name.trim()) {
             newErrors.name = 'Name is required';
             valid = false;
@@ -82,7 +66,6 @@ const Checkout = ({ onClose }) => {
             newErrors.name = 'Name should only contain letters and spaces';
             valid = false;
         }
-
         if (!email.trim()) {
             newErrors.email = 'Email is required';
             valid = false;
@@ -90,45 +73,33 @@ const Checkout = ({ onClose }) => {
             newErrors.email = 'Email is invalid';
             valid = false;
         }
-
         if (!phone.trim()) {
             newErrors.phone = 'Phone number is required';
             valid = false;
         }
-
         if (!address.trim()) {
             newErrors.address = 'Address is required';
             valid = false;
         }
-
         if (!city.trim()) {
             newErrors.city = 'City is required';
             valid = false;
         }
-
         if (!state.trim()) {
             newErrors.state = 'State is required';
             valid = false;
         }
-
         if (!country.trim()) {
             newErrors.country = 'Country is required';
             valid = false;
         }
-
         if (!zip.trim()) {
             newErrors.zip = 'Zip code is required';
             valid = false;
-        } else if (!/^\d{6}$/.test(zip)) {
-            newErrors.zip = 'Zip code must be exactly 6 digits';
-            valid = false;
         }
-
-
         setErrors(newErrors);
         return valid;
     };
-
     const loadScript = (src) => {
         return new Promise((resolve) => {
             const script = document.createElement('script');
@@ -142,25 +113,22 @@ const Checkout = ({ onClose }) => {
             document.body.appendChild(script);
         });
     };
-
     const PlaceOrder = async () => {
         try {
             const paymentdata = {
-                currency: "INR",
+                currency: currency,
                 payment_method: selectedPaymentMethod,
                 items: products
             };
-
             const response = await axiosInstance.post("/orders/place-order", paymentdata);
-            console.log(response.data)
-
+            console.log(response)
             if (response.data.status) {
                 if (selectedPaymentMethod === "razorpay") {
                     displayRazorpay(response.data.result, response.data.razorpay_key);
                 } else if (selectedPaymentMethod === 'stripe') {
-                    makeStripePayment(response?.data?.result, "pk_test_51L1E9YSFDFHp5bEhFLrxuBRiZ0ifZQE5Nle0k1szQOzv3H3fOG0UXU2QsxbBzvGJYBDqsFN73f0P58hWVpFJYddC00qtpMYQRs");
+                    makeStripePayment(response?.data?.result.url, "pk_test_51L1E9YSFDFHp5bEhFLrxuBRiZ0ifZQE5Nle0k1szQOzv3H3fOG0UXU2QsxbBzvGJYBDqsFN73f0P58hWVpFJYddC00qtpMYQRs");
                 } else if (selectedPaymentMethod === 'paypal') {
-                    makePaypalPayment(response.approval_url);
+                    makePaypalPayment(response?.approval_url);
                 } else {
                     console.log("Please choose a payment method!");
                 }
@@ -171,38 +139,30 @@ const Checkout = ({ onClose }) => {
             console.log(err);
         }
     };
-
     const razorpayVerification = async (razorpay_payment_id, razorpay_order_id, razorpay_signature) => {
         const data = await axiosInstance.post("/orders/verify-payment", { razorpay_payment_id, razorpay_order_id, razorpay_signature });
         console.log(data);
     };
-
     const makePaypalPayment = (link) => {
         if (link) {
             window.location.href = link;
         }
     };
-
     const makeStripePayment = (link) => {
         if (link) {
             window.location.href = link;
         }
     };
-
     async function displayRazorpay(order, razoypayKey) {
-        console.log("datacheck",order,)
-        console.log("checkurl",razoypayKey)
         const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-
         if (!res) {
             console.log("Razorpay SDK failed to load. Are you online?");
             return;
         }
-
         const options = {
             key: razoypayKey,
             amount: order.amount,
-            currency: "INR",
+            currency: currency,
             name: "Digi Bulk Marketing",
             description: "Order #" + order.receipt,
             image: "https://api.digibulkmarketing.com/media/reseller/dbm/logo.png",
@@ -216,10 +176,9 @@ const Checkout = ({ onClose }) => {
                 razorpayVerification(response.razorpay_payment_id, response.razorpay_order_id, response.razorpay_signature);
             },
             theme: {
-                color: "#3399cc",
+                color: "#3399CC",
             },
         };
-        console.log("options",options)
         const razorpay = new window.Razorpay(options);
         razorpay.on("payment.failed", function (response) {
             alert(response.error.code);
@@ -230,10 +189,8 @@ const Checkout = ({ onClose }) => {
             alert(response.error.metadata.order_id);
             alert(response.error.metadata.payment_id);
         });
-
         razorpay.open();
     }
-
     const handleSubmit = () => {
         const isValid = validateForm();
         if (isValid) {
@@ -262,8 +219,10 @@ const Checkout = ({ onClose }) => {
                 />
                 <Typography fontWeight={600} align="center">Checkout</Typography>
             </Grid>
-
             <Box sx={{ p: 2 }}>
+                <Typography variant="h6" component="div">
+                        Total Price : {currencySymbol}{(subtotal * exchangeRates).toFixed(2)}
+                    </Typography>
                 <Box display="flex" justifyContent="space-between" alignItems="center" >
                     <Typography variant="h6"> Address</Typography>
                 </Box>
@@ -286,12 +245,13 @@ const Checkout = ({ onClose }) => {
                         <FormControlLabel value="home" control={<Radio />} label="Home" />
                         <FormControlLabel value="office" control={<Radio />} label="Office" />
                     </RadioGroup>
-                    <Grid container spacin  g={2}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12} >
                             <TextField
                                 label="Name"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 error={!!errors.name}
@@ -303,6 +263,7 @@ const Checkout = ({ onClose }) => {
                                 label="Email"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 error={!!errors.email}
@@ -313,7 +274,7 @@ const Checkout = ({ onClose }) => {
                             <PhoneInput
                                 inputStyle={{
                                     width: "100%",
-                                    height: "55px",
+                                    height: "40px",
                                     fontFamily: "Monospace",
                                     border: "1px solid #AEB4BE",
                                 }}
@@ -336,6 +297,7 @@ const Checkout = ({ onClose }) => {
                                 label="Billing address"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 error={!!errors.address}
@@ -348,6 +310,7 @@ const Checkout = ({ onClose }) => {
                                 variant="outlined"
                                 fullWidth
                                 value={city}
+                                  size="small"
                                 onChange={(e) => setCity(e.target.value)}
                                 error={!!errors.city}
                                 helperText={errors.city}
@@ -359,32 +322,54 @@ const Checkout = ({ onClose }) => {
                                 variant="outlined"
                                 fullWidth
                                 value={state}
+                                  size="small"
                                 onChange={(e) => setState(e.target.value)}
                                 error={!!errors.state}
                                 helperText={errors.state}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <TextField
-                                label="Country"
-                                variant="outlined"
-                                fullWidth
-                                value={country}
-                                onChange={(e) => setCountry(e.target.value)}
-                                error={!!errors.country}
-                                helperText={errors.country}
-                            />
+                        <TextField
+                        
+                        margin="dense"
+                        name="country"
+                        label="Country"
+                        select
+                          size="small"
+                        onChange={(e) => setCountry(e.target.value)}
+                        fullWidth
+                        value={country}
+             
+                        SelectProps={{
+                          MenuProps: {
+                            PaperProps: {
+                              style: {
+                                maxHeight: 200,
+                                maxWidth:140,
+                                overflow: "auto",
+                              },
+                            },
+                          },
+                        }}
+                        sx={{ fontSize: "1.25rem" }}
+                      >
+                        {countrys?.map((country , i) => (
+                          <MenuItem key={i} value={country.countryNameEn}  >
+                            {country.countryNameEn}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                        <TextField
+                            <TextField
                                 label="Zip code"
                                 variant="outlined"
                                 fullWidth
+                                  size="small"
                                 value={zip}
                                 onChange={(e) => setZip(e.target.value)}
                                 error={!!errors.zip}
                                 helperText={errors.zip}
-                                inputProps={{ maxLength: 6 }}
                             />
                         </Grid>
                     </Grid>
@@ -401,7 +386,6 @@ const Checkout = ({ onClose }) => {
                     </Box>
                 </Box>
             </Box>
-
             <Modal
                 open={open}
                 onClose={() => setOpen(false)}
@@ -424,37 +408,17 @@ const Checkout = ({ onClose }) => {
                     <Typography id="modal-modal-title" display={'flex'} justifyContent={'center'} variant="h4" component="h2" gutterBottom>
                         View Payment Details
                     </Typography>
-                    <Typography variant="h6" component="div" sx={{ marginBottom: 2 }}>
-                        Price Details
+                    <Typography variant="h5" component="div">
+                        Total Price : {currencySymbol}{(subtotal * exchangeRates).toFixed(2)}
                     </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <Typography variant="body2">Price</Typography>
-                        </Grid>
-                        <Grid item xs={6} textAlign="right">
-                            <Typography variant="body2">1200</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="body2">Quantity</Typography>
-                        </Grid>
-                        <Grid item xs={6} textAlign="right">
-                            <Typography variant="body2">1</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="body2">Total</Typography>
-                        </Grid>
-                        <Grid item xs={6} textAlign="right">
-                            <Typography variant="body2">1200</Typography>
-                        </Grid>
-                    </Grid>
-                    <Box my={2}>
+                    <Box my={3}>
                         <Typography variant="h6" component="div">
                             Payment Method
                         </Typography>
                         <RadioGroup
                             aria-label="payment-method"
                             value={selectedPaymentMethod}
-                            // onChange={setSelectedPaymentMethod}
+                        // onChange={setSelectedPaymentMethod}
                         >
                             <FormControlLabel
                                 value="razorpay"
@@ -500,9 +464,8 @@ const Checkout = ({ onClose }) => {
                         </Button>
                     </Grid>
                 </Box>
-            </Modal>
-        </Box>
+            </Modal >
+        </Box >
     );
 }
-
 export default Checkout;

@@ -17,6 +17,9 @@ import {
   Button,
   IconButton,
   Modal,
+  Checkbox,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
@@ -37,11 +40,9 @@ import ProductDetails from "./productDetails";
 import Checkout from "./checkout";
 import { useSelector, useDispatch } from "react-redux";
 import { cartProduct } from "../../redux/cart/cartSlice";
-
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../../redux/wishlist/wishlistSlice";
+import { addToWishlist, removeFromWishlist } from '../../redux/wishlist/wishlistSlice';
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { CURRENCIES_SYMBOL } from "../currency/currency"
 
 const useStyles = makeStyles({
   carousel: {
@@ -123,7 +124,10 @@ const CustomButtonGroup = ({ next, previous }) => (
 );
 
 const Shop = () => {
-  const cartItemCount = useSelector((state) => state.cart.items.length);
+  const cartItemCount = useSelector((state) => state.cart?.items.length);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const { currency, exchangeRates } = useSelector((state) => state.currency);
+  const currencySymbol = CURRENCIES_SYMBOL[currency]
   const [products, setProducts] = useState(null);
   const [error, setError] = useState(null);
   const [detailDrawer, setDetailDrawer] = useState(false);
@@ -137,15 +141,16 @@ const Shop = () => {
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const drawerProduct = useSelector((state) => state.cart.selectedProduct);
   const [open, setOpen] = useState(false);
-  
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const toggleDetailDrawer =
     (newOpen, product = null) =>
-    () => {
-      setDetailDrawer(newOpen);
-      if (newOpen) setCartDrawer(false);
-      dispatch(cartProduct({ product }));
-    };
+      () => {
+        setDetailDrawer(newOpen);
+        if (newOpen) setCartDrawer(false);
+        dispatch(cartProduct({ product }));
+      };
 
   const toggleCartDrawer = (newOpen) => () => {
     setCartDrawer(newOpen);
@@ -159,9 +164,10 @@ const Shop = () => {
 
   const multiCarouselResponsive = {
     superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 5 },
-    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 4 },
-    tablet: { breakpoint: { max: 1024, min: 464 }, items: 2 },
-    mobile: { breakpoint: { max: 464, min: 0 }, items: 1 },
+    desktop: { breakpoint: { max: 3000, min: 1000 }, items: 4 },
+    tablet: { breakpoint: { max: 1000, min: 800 }, items: 3 },
+    sm: { breakpoint: { max: 800, min: 500 }, items: 2 },
+    mobile: { breakpoint: { max: 500, min: 0 }, items: 1 },
   };
 
   const carouselResponsive = {
@@ -177,27 +183,27 @@ const Shop = () => {
     "#F3E5F5",
     "#EDE7F6",
   ];
-  const fetchData = async () => {
-    try {
-      const response = await axiosInstance.get("/products");
-      const data = response.data;
-      setProducts(data);
-      if (data.products.length > 0) {
-        setSelectedProduct(data.products[0]);
-      }
-    } catch (error) {
-      setError(error.message);
-      console.error("Error fetching data:", error);
-    }
-  };
+
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("/products");
+        const data = response.data;
+        setProducts(data);
+        if (data.products.length > 0) {
+          setSelectedProduct(data.products[0]);
+        }
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching data:", error);
+      }
+    };
     fetchData();
   }, []);
 
   const handleProductChange = (index) => {
     setTabValue(index);
     setSelectedProduct(products.products[index]);
-    console.log("setSelectedProduct",selectedProduct)
   };
 
   const handleTabChange = (event, newValue) => {
@@ -215,19 +221,28 @@ const Shop = () => {
 
   const handleWishlist = (product, e) => {
     e.stopPropagation();
-    console.log("shop product", product);
     const isProductInWishlist = wishlistItems?.find(
       (item) => item?.product?.id === product?.id
     )?.isInWishlist;
-    console.log(isProductInWishlist, "shop");
     if (isProductInWishlist) {
       const index = wishlistItems.findIndex(
         (item) => item.product.id === product.id
       );
       dispatch(removeFromWishlist(index));
+      setSnackbarMessage(`${product.name} removed from wishlist`);
     } else {
       dispatch(addToWishlist({ product }));
+      setSnackbarMessage(`${product.name} added to wishlist`);
     }
+    setOpenSnackbar(true);
+  };
+
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   if (!products) {
@@ -266,7 +281,6 @@ const Shop = () => {
   }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(selectedProduct?.demoVideoUrl);
 
   return (
     <Box sx={{ background: "#F4F4F4" }}>
@@ -290,7 +304,7 @@ const Shop = () => {
           <Carousel
             customButtonGroup={<CustomButtonGroup />}
             arrows={false}
-            swipeable={false}
+            swipeable
             infinite={true}
             responsive={multiCarouselResponsive}
             containerClass={classes.carousel}
@@ -370,6 +384,7 @@ const Shop = () => {
                       },
                     }}
                   >
+
                     <Grid
                       container
                       sx={{
@@ -382,7 +397,7 @@ const Shop = () => {
                         item
                         xs={12}
                         sx={{
-                          textAlign: "right",
+                          position: 'relative',
                           "& img": {
                             transition: "transform 0.3s ease-in-out",
                           },
@@ -391,7 +406,7 @@ const Shop = () => {
                           },
                         }}
                       >
-                        {/* <Checkbox onClick={(e) => handleWishlist(item , e)} icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={wishlistItems.some(wishlistItem => wishlistItem.product.id === item.id)} /> */}
+                        <Checkbox sx={{ position: 'absolute' , top: 0, right: 0}} onClick={(e) => handleWishlist(item , e)} icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={wishlistItems.some(wishlistItem => wishlistItem.product.id === item.id)} />
                         <img
                           width={220}
                           height={220}
@@ -404,16 +419,7 @@ const Shop = () => {
                       {item.name}
                     </Typography>
                     <Typography my={1}>
-                      ₹
-                      {item.rates.reduce(
-                        (min, rate) => Math.min(min, rate.price),
-                        Infinity
-                      )}
-                      - ₹
-                      {item.rates.reduce(
-                        (max, rate) => Math.max(max, rate.price),
-                        -Infinity
-                      )}
+                      {currencySymbol}{(item.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)} - {currencySymbol}{(item.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2)}
                     </Typography>
                     <Box display="flex" justifyContent="space-evenly">
                       <Rating readOnly value={5} />
@@ -585,7 +591,7 @@ const Shop = () => {
                     gap: "16px",
                     borderRadius: "10px",
                     padding: "16px",
-                    width: { md: "100%", sm: "90%", xs: "90%" },
+                    width: { md: "90%", sm: "90%", xs: "90%" },
                     maxWidth: "747px",
                     margin: "0",
                     textAlign: { xs: "center", sm: "left" },
@@ -602,7 +608,7 @@ const Shop = () => {
                       alignItems: "center",
                       minWidth: { xs: "30px", sm: "40px" },
                       minHeight: { xs: "30px", sm: "40px" },
-                      cursor: "pointer", // Add pointer cursor for better UX
+                      cursor: "pointer",
                     }}
                     onClick={handleOpen}
                   >
@@ -628,7 +634,7 @@ const Shop = () => {
                         p: 4,
                       }}
                     >
-                     {/*   <iframe
+                      {/*   <iframe
                         width="560"
                         height="315"
                         src={selectedProduct?.demoVideoUrl}
@@ -641,6 +647,7 @@ const Shop = () => {
                       <iframe
                         width="100%"
                         height="400"
+                       // src={selectedProduct?.demoVideoUrl}
                         // src={`https://www.youtube.com/embed/${selectedProduct?.demoVideoUrl}`}
                         src="https://youtu.be/QtNNAh_IgYs"
                         title="YouTube video player"
@@ -648,10 +655,7 @@ const Shop = () => {
                         allowFullScreen
                       ></iframe>
                       <Button onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
-
-
-
-                    </Box>
+                  </Box>
                   </Modal>
 
                   <CardContent sx={{ flex: 1 }}>
@@ -736,6 +740,18 @@ const Shop = () => {
       >
         <Checkout onClose={toggleCheckoutDrawer(false)} />
       </Drawer>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      >
+       <SnackbarContent
+          message={snackbarMessage}
+          sx={{ backgroundColor: "#4caf50", color: "#fff" }}
+        />
+      </Snackbar>
+      
     </Box>
   );
 };

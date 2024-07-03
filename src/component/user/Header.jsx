@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EmailIcon from "@mui/icons-material/Email";
 import CallIcon from "@mui/icons-material/Call";
 import XIcon from "@mui/icons-material/X";
@@ -16,18 +16,50 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { changeCurrency, setExchangeRates } from '../../redux/currency/currencySlice'
+import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../../util/axiosInstance";
+import { CURRENCIES } from "../currency/currency";
 
 const Header = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const currencies = useSelector((state) => state.currency.currency);
+  const exchangeRates = useSelector((state) => state.currency.exchangeRates);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isXSmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
+  const [currency, setCurrency] = useState(currencies);
+  const [exchangeRate, setExchangeRate] = useState(exchangeRates);
+  const [isAddIcon, setIsAddIcon] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const [currency, setCurrency] = useState("INR");
-  const [isAddIcon, setIsAddIcon] = useState(true); // State to track which icon to display
-  const [isExpanded, setIsExpanded] = useState(false); // State to track whether header is expanded
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: 200,
+      },
+    },
+  };
+
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const response = await axiosInstance.get("/app");
+        const data = response?.data?.data?.currencyRates;
+        setExchangeRate(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchCurrencies();
+  }, [dispatch]);
 
   const handleChange = (event) => {
-    setCurrency(event.target.value);
+    const selectedCurrency = event.target.value;
+    const eRate = exchangeRate[selectedCurrency];
+    setCurrency(selectedCurrency);
+    dispatch(changeCurrency(selectedCurrency));
+    dispatch(setExchangeRates(eRate));
   };
 
   const handleEmailClick = () => {
@@ -40,19 +72,13 @@ const Header = () => {
 
   const socialMediaIcons = [
     { icon: <XIcon fontSize="small" />, link: "https://www.twitter.com" },
-    {
-      icon: <FacebookIcon fontSize="small" />,
-      link: "https://www.facebook.com",
-    },
-    {
-      icon: <InstagramIcon fontSize="small" />,
-      link: "https://www.instagram.com",
-    },
+    { icon: <FacebookIcon fontSize="small" />, link: "https://www.facebook.com" },
+    { icon: <InstagramIcon fontSize="small" />, link: "https://www.instagram.com" },
   ];
 
   const toggleIcon = () => {
-    setIsAddIcon((prevState) => !prevState); // Toggle between true and false
-    setIsExpanded((prevState) => !prevState); // Toggle the header height
+    setIsAddIcon((prevState) => !prevState);
+    setIsExpanded((prevState) => !prevState);
   };
 
   return (
@@ -88,38 +114,41 @@ const Header = () => {
             >
               info@digibulkmarketing.com
             </Typography>
+            <CallIcon sx={{ cursor: "pointer", fontSize: "medium", ml: 2 }} />
+            <Typography
+              onClick={handlePhoneClick}
+              sx={{ cursor: "pointer", color: "#fff" }}
+            >
+              1800-889-8358
+            </Typography>
           </Box>
           {(isExpanded || (!isSmallScreen && !isXSmallScreen)) && (
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "space-between",
                 gap: "5px",
                 flexWrap: "wrap",
               }}
             >
-              <CallIcon sx={{ cursor: "pointer", fontSize: "medium" }} />
-              <Typography
-                onClick={handlePhoneClick}
-                sx={{ cursor: "pointer", color: "#fff" }}
-              >
-                1800-889-8358
-              </Typography>
               <FormControl variant="standard" sx={{ color: "#fff" }}>
                 <Select
-                  labelId="currency-select-label"
-                  id="currency-select"
                   value={currency}
                   onChange={handleChange}
                   label="Currency"
+                  MenuProps={MenuProps}
                   sx={{
                     ".MuiSelect-icon": { color: "#fff" },
                     ".MuiInputBase-input": { color: "#fff", cursor: "pointer" },
                     cursor: "pointer",
                   }}
                 >
-                  <MenuItem value="INR">INR</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
+                  {CURRENCIES?.map((currency, index) => (
+                    <MenuItem key={index} value={currency}>
+                      {currency}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               {socialMediaIcons.map((social, index) => (

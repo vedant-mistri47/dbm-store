@@ -4,16 +4,18 @@ export const currencySlice = createSlice({
   name: 'currency',
   initialState: {
     currency: "INR",
-    exchangeRate: 1,
+    exchangeRates: 1
   },
   reducers: {
     changeCurrency: (state, action) => {
       state.currency = action.payload;
-      state.exchangeRate = 0.012;
+    },
+    setExchangeRates: (state , action) => {
+      state.exchangeRates = action.payload;
     }
   },
 });
 
-export const { changeCurrency } = currencySlice.actions;
+export const { changeCurrency , setExchangeRates } = currencySlice.actions;
 
 export default currencySlice.reducer;

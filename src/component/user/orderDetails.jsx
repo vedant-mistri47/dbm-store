@@ -1,89 +1,134 @@
-import { Box, Grid, Rating, Typography, Badge, Divider, Stepper, Step, StepLabel } from '@mui/material'
+import { Box, Grid, Typography, Badge, Divider } from '@mui/material';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import zomatoImg from '../image/google-map-extractor-7 1.png';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import axiosInstance from '../../util/axiosInstance';
+import { CURRENCIES_SYMBOL } from '../currency/currency';
+import { useSelector } from 'react-redux';
 
-const orderDetails = ({ onClose }) => {
-    const [expanded, setExpanded] = useState(false);
-    const steps = ['Oreder Confirmed', 'shipping', 'to deliver'];
+const OrderDetails = ({ onClose, orderId, onClick }) => {
+  const [order, setOrder] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const { currency, exchangeRates } = useSelector((state) => state.currency);
+  const currencySymbol = CURRENCIES_SYMBOL[currency]
 
-    const toggleExpanded = () => {
-        setExpanded((prevExpanded) => !prevExpanded);
+  const steps = ['Order Confirmed', 'Shipping', 'To Deliver'];
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    const month = monthNames[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month} ${day}, ${year}`;
+  };
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await axiosInstance.post('/orders/order-by-id', { order_id: orderId });
+        setOrder(response.data.order);
+      } catch (error) {
+        console.error('Error fetching order:', error);
+        setError(error.message);
+      }
     };
-    return (
-        <div>
-            <Box sx={{ width: { xs: 250, md: 350 }, p: 3 }}>
-                <Grid container alignItems="center" justifyContent="space-between" mb={3}>
-                    <NavigateBeforeRoundedIcon
-                        fontSize="large"
-                        cursor="pointer"
-                        onClick={onClose}
-                    />
-                    <Typography fontWeight={600}>Order Details</Typography>
-                </Grid>
 
-                <Stepper activeStep={1} alternativeLabel>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
+    const fetchProducts = async () => {
+      try {
+        const response = await axiosInstance.get('/products');
+        setProducts(response.data.products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setError(error.message);
+      }
+    };
 
-                <Grid container my={5}>
-                    <Grid item xs={12} sx={{ borderRadius: '15px', backgroundColor: '#eee', textAlign: 'center', p: '7px 0' }}>
-                        <img width="80%" src={zomatoImg} alt="Product" />
-                    </Grid>
-                </Grid>
+    fetchOrder();
+    fetchProducts();
+  }, [orderId]);
 
-                <Box>
-                    <Badge badgeContent="SHIPPING" color="primary" sx={{ ml: 4 }} />
-                    <Grid container alignItems="flex-end">
-                        <Grid item xs={8}>
-                            <Typography sx={{ my: '10px', fontWeight: 'bold' }}>
-                                zomato data extractor
-                            </Typography>
-                            <Grid container justifyContent="space-between">
-                                <Rating readOnly value={5} />
-                                <Typography>99+ Reviews</Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={4} textAlign="right">
-                            <Typography sx={{ color: '#818181de' }}>Price</Typography>
-                            <Typography fontWeight={600}>$999</Typography>
-                        </Grid>
-                    </Grid>
-                </Box>
-                <Box sx={{ my: 5 }}>
-                    <Typography fontWeight="bold">Descriptions</Typography>
-                    <Typography noWrap={!expanded}>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi dignissimos dolores numquam maiores mollitia quo debitis nam cupiditate magnam eos dolor assumenda molestias, quas quos sed nostrum veritatis corrupti consequatur. Autem, magni.
-                    </Typography>
-                    <Typography
-                        onClick={toggleExpanded}
-                        sx={{ cursor: 'pointer', color: '#1783FE', textDecoration: 'underline' }}
-                    >
-                        {expanded ? 'Read less' : 'Read more'}
-                    </Typography>
-                </Box>
-                <Grid container alignItems="center">
-                    <Grid item xs={12} container justifyContent='space-between'>
-                        <Typography sx={{ color: '#818181de' }}>Product Total</Typography>
-                        <Typography>$999</Typography>
-                    </Grid>
-                    <Grid item xs={12} container justifyContent='space-between'>
-                        <Typography sx={{ color: '#818181de' }}>discount</Typography>
-                        <Typography>10%</Typography>
-                    </Grid>
-                    <Grid item xs={12}><Divider /></Grid>
-                    <Grid item xs={12} container justifyContent='space-between'>
-                        <Typography fontWeight={600}>Final Price</Typography>
-                        <Typography fontWeight={600}>${999 * 0.9}</Typography>
-                    </Grid>
-                </Grid>
-            </Box>
-        </div>
-    )
-}
+  const orderItems = order?.items
 
-export default orderDetails
+  return (
+    <Box sx={{ width: { xs: 250, md: 350 }, p: 3 }}>
+      <Grid container alignItems="center" justifyContent="space-between" mb={3}>
+        <NavigateBeforeRoundedIcon
+          fontSize="large"
+          cursor="pointer"
+          onClick={onClose}
+        />
+        <Typography fontWeight={600}>Order Details</Typography>
+      </Grid>
+
+      <Typography>Order Id:</Typography>
+      <Typography variant='h6'>{orderId}</Typography>
+
+      <Divider sx={{ my: 1 }} />
+
+      <Grid container justifyContent='space-between'>
+        <Grid item xs={12} md={5} textAlign='left'>
+          <Typography>Created At:</Typography>
+          <Typography variant='h6'>{order ? formatDate(order.createdAt) : ''}</Typography>
+        </Grid>
+        <Divider orientation="vertical" flexItem />
+        <Grid container item xs={12} md={3} textAlign='center' sx={{ flexDirection: { xs: "row", md: "column" }, alignItems: 'center' }}>
+          <Typography>Payment:</Typography>
+          <Badge badgeContent={order?.paymentStatus} color='error' sx={{ my: 2, mx: { xs: 4, md: 0 } }} />
+        </Grid>
+        <Divider orientation="vertical" flexItem />
+        <Grid item xs={12} md={3} textAlign='center' container sx={{ flexDirection: { xs: "row", md: "column" }, alignItems: 'center' }}>
+          <Typography>Status:</Typography>
+          <Badge badgeContent={order?.status} color='primary' sx={{ my: 2, mx: { xs: 5, md: 0 } }} />
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ my: 1 }} />
+
+      <Grid>
+        <Typography variant='h6'>Items:</Typography>
+        {orderItems?.map(item => {
+          const orderItem = products.find(itm => itm.id === item.product_id)
+          return (
+            <Grid container key={item.id} my={2} sx={{ cursor: "pointer" }} onClick={onClick}>
+              <Grid item xs={3} textAlign='start'>
+                <img width={50} height={50} src={orderItem?.image} alt="Product" />
+              </Grid>
+              <Grid item xs={5} textAlign='center'>
+                <Typography>{orderItem?.name}</Typography>
+              </Grid>
+              <Grid item xs={1} textAlign='center'>
+                <Typography>{item.quantity}</Typography>
+              </Grid>
+              <Grid item xs={3} textAlign='end'>
+                <Typography>{currencySymbol}{(orderItem?.rates?.find(itm => itm._id === item.variation_id).price * exchangeRates).toFixed(2)}</Typography>
+              </Grid>
+            </Grid>
+          )
+        })}
+      </Grid>
+
+      <Grid container alignItems="center">
+        <Grid item xs={12} container justifyContent='space-between'>
+          <Typography sx={{ color: '#818181de' }}>Product Total</Typography>
+          <Typography>{currencySymbol}{(order?.orderTotal * exchangeRates).toFixed(2)}</Typography>
+        </Grid>
+        <Grid item xs={12} container justifyContent='space-between'>
+          <Typography sx={{ color: '#818181de' }}>Discount</Typography>
+          <Typography></Typography>
+        </Grid>
+        <Grid item xs={12}><Divider /></Grid>
+        <Grid item xs={12} container justifyContent='space-between'>
+          <Typography fontWeight={600}>Final Price</Typography>
+          <Typography fontWeight={600}>{currencySymbol}{(order?.orderTotal * exchangeRates).toFixed(2)}</Typography>
+        </Grid>
+      </Grid>
+    </Box >
+  );
+};
+
+export default OrderDetails;

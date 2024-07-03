@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Divider,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import img from "../image/logo (1).png";
@@ -22,7 +23,6 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import axiosInstance from "../../util/axiosInstance";
-
 function Footer() {
   const [showScroll, setShowScroll] = useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
@@ -39,7 +39,6 @@ function Footer() {
     name: "",
     email: "",
   });
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -119,32 +118,26 @@ function Footer() {
   const handleRefundDialogClose = () => {
     setRefundDialogOpen(false);
   };
-
   const validateEmail = (email) => {
     // Regex pattern for email validation
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
-
   const handleNewsletterSubmit = async (event) => {
     event.preventDefault();
-
     // Validate inputs
     let errors = {
       name: "",
       email: "",
     };
-
     if (!newsletterName.trim()) {
       errors.name = "Name is required";
     }
-
     if (!newsletterEmail.trim()) {
       errors.email = "Email is required";
     } else if (!validateEmail(newsletterEmail)) {
       errors.email = "Email is invalid";
     }
-
     if (errors.name || errors.email) {
       setValidationErrors(errors);
       setNewsletterMessage("");
@@ -156,7 +149,6 @@ function Footer() {
           email: newsletterEmail,
         });
         setNewsletterMessage("Subscription successful!");
-
         // Clear form fields after successful submission
         setNewsletterName("");
         setNewsletterEmail("");
@@ -283,6 +275,7 @@ function Footer() {
                 </Box>
               </Box>
             </Grid>
+
             {/* About Us and Useful Links */}
             <Grid item xs={12} md={4}>
               <Grid container spacing={2} justifyContent="space-around">
@@ -450,13 +443,13 @@ function Footer() {
         </Box>
       )}
 
-      <Box sx={{ backgroundColor: "#8C8C8C" }} padding="20px 0">
+      <Box sx={{ backgroundColor: "#fff" , boxShadow:20}} padding="20px 0">
         <Container>
           <Grid container display="flex">
             <Grid item xs={12} md={5}>
               <Typography
                 fontSize="14px"
-                sx={{ color: "#fff", alignItems: "center" }}
+                sx={{ color: "#000", alignItems: "center" }}
               >
                 Copyright © Designed & Developed by BITBEAST Pvt. Ltd. 2024
               </Typography>
@@ -469,30 +462,31 @@ function Footer() {
                   flexDirection: { xs: "column", sm: "row" },
                   alignItems: "center",
                   justifyContent: "space-between",
+                  color:'#000'
                 }}
               >
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handlePrivacyDialogOpen}
                 >
                   Privacy Policy
                 </Typography>
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handleTermsDialogOpen}
                 >
                   Terms and Conditions
                 </Typography>
                 <Typography
-                  sx={{ color: "#fff", cursor: "pointer" }}
+                  sx={{ color: "#000", cursor: "pointer" }}
                   onClick={handleRefundDialogOpen}
                 >
                   Refund and Return Policy
                 </Typography>
-                <Typography sx={{ color: "#fff", cursor: "pointer" }}>
+                <Typography sx={{ color: "#000", cursor: "pointer" }}>
                   Contact
                 </Typography>
-                <Typography sx={{ color: "#fff", cursor: "pointer" }}>
+                <Typography sx={{ color: "#000", cursor: "pointer" }}>
                   About
                 </Typography>
               </Box>
