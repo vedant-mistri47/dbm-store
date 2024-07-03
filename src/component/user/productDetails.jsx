@@ -194,21 +194,31 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
 
    
 
-      <Grid container my={5}>
-        <Grid
-          item
-          xs={12}
-          sx={{ borderRadius: 2, backgroundColor: "#eee", textAlign: "center" }}
-        >
-          <img width="60%" src={productData.image} alt="Product" />
-        <Checkbox
-          onChange={handleWishlist}
-          checked={isProductInWishlist}
-          icon={<FavoriteBorder />}
-          checkedIcon={<Favorite />}
+      <Grid container my={1}>
+    <Grid 
+        item 
+        xs={12} 
+        sx={{ 
+            position: 'relative', 
+            borderRadius: 2, 
+            backgroundColor: '#eee', 
+            textAlign: 'center' 
+        }}
+    >
+        <img width="65%" src={productData.image} alt="Product" />
+        <Checkbox 
+            onChange={handleWishlist} 
+            checked={isProductInWishlist} 
+            icon={<FavoriteBorder />} 
+            checkedIcon={<Favorite />} 
+            sx={{ 
+                position: 'absolute',
+                top: 8, 
+                right: 8, 
+            }} 
         />
-        </Grid>
-      </Grid>
+    </Grid>
+</Grid>
       <Box>
         <Badge badgeContent="NEW" color="primary" sx={{ ml: 2 }} />
         <Grid container alignItems="flex-end" spacing={2}>
@@ -222,17 +232,15 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
             </Grid>
           </Grid>
           <Grid container item xs={4} justifyContent="center" alignItems='center'>
-            <Typography color='khaki' my={1}> price :  
-            {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
-               </Typography> 
-            {/* <Typography fontWeight='bold'>
-              {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
-            </Typography> */}
+            
           </Grid>
+              <Typography color='khaki' my={1} sx={{ ml: 2 }} > price :  
+              {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
+                 </Typography> 
         </Grid>
       </Box>
 
-      <Box sx={{ my: 5 }}>
+      <Box sx={{ my: 1 }}>
         <Typography fontWeight="bold">Descriptions</Typography>
         <Typography noWrap={!expanded}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi
@@ -252,13 +260,13 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
         </Typography>
       </Box>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         {productData.rates.map((item, index) => (
           <Grid item xs={6} md={4} key={index}>
             <Box
               textAlign='center'
               borderRadius={5}
-              p={1}
+              py={0.5}
               border={`2px solid ${selectedVariation?._id === item._id ? 'blue' : 'gray'}`}
               onClick={() => handleVariationClick(index, item._id)}
               sx={{ cursor: 'pointer' }}
@@ -299,7 +307,7 @@ const ProductDetails = ({ onClose, product, cartDrawer }) => {
       <Button
         variant="contained"
         color="black"
-        sx={{ color: "#fff", borderRadius: 2, p: 2 }}
+        sx={{ color: "#fff", borderRadius: 2, p: 1 }}
         fullWidth
         disabled={isInCart() > 0}
         onClick={addToCartHandler}

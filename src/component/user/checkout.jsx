@@ -375,10 +375,10 @@ const Checkout = ({ onClose }) => {
                     </Grid>
                     <Box display="flex" justifyContent="space-between" mt={2} >
                         <Button
-                            variant="contained"
-                            color="black"
-                            sx={{ color: '#fff', borderRadius: 2, p: 2 }}
-                            fullWidth
+                             variant="contained"
+                             color="black"
+                             sx={{ color: "#fff", borderRadius: 2, mt: 2 }}
+                             fullWidth
                             onClick={handleSubmit}
                         >
                             Make Payment
