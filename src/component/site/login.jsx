@@ -100,7 +100,7 @@ function Login({ onClose }) {
       setLoading(false);
       if (result.status) {
         dispatch(setToken(result));
-        dispatch(setUserDetail(result));
+        dispatch(setUserDetail(result.user));
         setSnackbarMessage("OTP verified successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);

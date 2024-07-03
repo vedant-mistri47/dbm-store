@@ -14,6 +14,8 @@ import "react-phone-input-2/lib/style.css";
 import validator from "validator";
 import axiosInstance from "../../util/axiosInstance";
 import { Image } from "../../../lib";
+import { setUserDetail } from "../../redux/auth/authSlice"
+import { useDispatch } from "react-redux";
 
 const style = {
   position: "absolute",
@@ -30,6 +32,7 @@ const EditProfile = ({ onClose }) => {
   const [profile, setProfile] = useState({
     name: "",
     email: "",
+    type: "",
     address: "",
     city: "",
     state: "",
@@ -37,6 +40,7 @@ const EditProfile = ({ onClose }) => {
     zip: "",
     phone: "",
   });
+  const dispatch = useDispatch()
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   console.log("profilePictureFile", profilePictureFile);
@@ -56,6 +60,7 @@ const EditProfile = ({ onClose }) => {
         setProfile({
           name: userProfile.name || "",
           email: userProfile.email || "",
+          type: userProfile.address.type,
           address: userProfile.address
             ? userProfile.address.addressLine1 || ""
             : "",
@@ -67,7 +72,7 @@ const EditProfile = ({ onClose }) => {
         });
         setProfilePicture(
           userProfile.profile ? Image(userProfile.profile) : null
-        ); // Assuming profile picture URL is returned
+        );
       }
     } catch (error) {
       console.error("Error fetching profile data", error);
@@ -137,7 +142,7 @@ const EditProfile = ({ onClose }) => {
         },
       });
       console.log("data.downloadUrl", data.downloadUrl);
-      return data.downloadUrl; // Assuming the API returns the file URL
+      return data.downloadUrl;
     } catch (error) {
       console.error("Error uploading profile picture", error);
       return null;
@@ -150,19 +155,20 @@ const EditProfile = ({ onClose }) => {
       email: profile.email,
       address: {
         country: profile.country,
-        type: "office",
+        type: profile.type,
         addressLine1: profile.address,
         city: profile.city,
         state: profile.state,
         zip: profile.zip,
       },
-      profile: profilePictureUrl || profilePicture || "", // Use the updated profile picture URL
+      profile: profilePictureUrl || profilePicture || "",
     };
-
+    
     try {
       const { data } = await axiosInstance.post("auth/set-profile", formData);
-      console.log("Profile updated successfully", data);
-      onClose(); // Close the modal after successful update
+      console.log("Profile updated successfully", data , "form data" , formData);
+      dispatch(setUserDetail(formData))
+      onClose();
     } catch (error) {
       console.error("Error updating profile", error);
     }
