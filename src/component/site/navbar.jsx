@@ -42,6 +42,7 @@ import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/auth/authSlice";
 import ProductDetails from "../user/productDetails";
 import Header from "../user/Header";
+import { Image } from "../../../lib";
 
 const pages = [
   { id: "#home", name: "HOME" },
@@ -62,6 +63,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const userDetails = useSelector((state) => state.auth.detail);
   const [wishlist, setWishlist] = useState(false);
   const [activePage, setActivePage] = useState("#home");
   const cartItemCount = useSelector((state) => state.cart.items.length);
@@ -192,8 +194,8 @@ const Navbar = () => {
           >
             {/* logo */}
             <Box sx={{ width: { xs: "40%", md: "20%" } }}>
-            <a href="#home" onClick={() => setActivePage("#home")}>
-              <img src={logo} alt="Logo" width="100%" />
+              <a href="#home" onClick={() => setActivePage("#home")}>
+                <img src={logo} alt="Logo" width="100%" />
               </a>
             </Box>
 
@@ -238,7 +240,11 @@ const Navbar = () => {
               >
                 Let's talk
               </Button>
-              <Badge badgeContent={cartItemCount} color="primary" sx={{ mx: 3 }}>
+              <Badge
+                badgeContent={cartItemCount}
+                color="primary"
+                sx={{ mx: 3 }}
+              >
                 <Box
                   sx={{
                     width: 35,
@@ -251,7 +257,10 @@ const Navbar = () => {
                   }}
                   onClick={toggleCartDrawer(true)}
                 >
-                  <ShoppingBagOutlinedIcon color="black" sx={{ cursor: "pointer" }} />
+                  <ShoppingBagOutlinedIcon
+                    color="black"
+                    sx={{ cursor: "pointer" }}
+                  />
                 </Box>
               </Badge>
 
@@ -262,7 +271,7 @@ const Navbar = () => {
                 >
                   <Avatar
                     alt="Profile Picture"
-                    src={profilePicture}
+                    src={Image(userDetails.profile)}
                     sx={{ width: 35, height: 35 }}
                   />
                 </IconButton>
@@ -415,14 +424,21 @@ const Navbar = () => {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={handleCloseUserMenu} data-item="Name" sx={{ fontSize: "10px" }}>
-                Name
+              <MenuItem
+                onClick={handleCloseUserMenu}
+                data-item="Name"
+                sx={{ fontSize: "10px" }}
+              >
+                {userDetails.name}
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleOpenModal} data-item="Profile">
                 Profile
               </MenuItem>
-              <MenuItem onClick={toggleWishlistDrawer(true)} data-item="Wishlist">
+              <MenuItem
+                onClick={toggleWishlistDrawer(true)}
+                data-item="Wishlist"
+              >
                 wishlist{" "}
                 {wishlistItemCount > 0 && (
                   <Badge

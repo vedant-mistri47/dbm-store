@@ -16,7 +16,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { changeCurrency, setExchangeRates } from '../../redux/currency/currencySlice'
+import {
+  changeCurrency,
+  setExchangeRates,
+} from "../../redux/currency/currencySlice";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../util/axiosInstance";
 import { CURRENCIES } from "../currency/currency";
@@ -72,8 +75,14 @@ const Header = () => {
 
   const socialMediaIcons = [
     { icon: <XIcon fontSize="small" />, link: "https://www.twitter.com" },
-    { icon: <FacebookIcon fontSize="small" />, link: "https://www.facebook.com" },
-    { icon: <InstagramIcon fontSize="small" />, link: "https://www.instagram.com" },
+    {
+      icon: <FacebookIcon fontSize="small" />,
+      link: "https://www.facebook.com",
+    },
+    {
+      icon: <InstagramIcon fontSize="small" />,
+      link: "https://www.instagram.com",
+    },
   ];
 
   const toggleIcon = () => {
@@ -88,14 +97,15 @@ const Header = () => {
           height:
             isSmallScreen || isXSmallScreen
               ? isExpanded
-                ? "50px"
-                : "30px"
+                ? "80px" // Height when expanded
+                : "50px" // Height when collapsed
               : "auto",
-          transition: "height 0.3s ease-in-out",
+          transition: "height 0.3s ease-in-out", // Add transition for height
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           position: "relative",
+          overflow: "hidden", // Ensure overflow is hidden for better scroll behavior
         }}
       >
         <Box
@@ -106,34 +116,48 @@ const Header = () => {
             flexWrap: "wrap",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <EmailIcon sx={{ cursor: "pointer", fontSize: "medium" }} />
-            <Typography
-              onClick={handleEmailClick}
-              sx={{ cursor: "pointer", color: "#fff", ml: 1 }}
-            >
-              info@digibulkmarketing.com
-            </Typography>
-            <CallIcon sx={{ cursor: "pointer", fontSize: "medium", ml: 2 }} />
-            <Typography
-              onClick={handlePhoneClick}
-              sx={{ cursor: "pointer", color: "#fff" }}
-            >
-              1800-889-8358
-            </Typography>
+          {/* Box for Email and Phone */}
+          <Box sx={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+            {/* Email */}
+            <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+              <EmailIcon
+                sx={{ cursor: "pointer", fontSize: "medium", color: "#fff" }}
+              />
+              <Typography
+                onClick={handleEmailClick}
+                sx={{ cursor: "pointer", color: "#fff", ml: 1 }}
+              >
+                info@digibulkmarketing.com
+              </Typography>
+            </Box>
+            {/* Phone */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <CallIcon
+                sx={{ cursor: "pointer", fontSize: "medium", color: "#fff" }}
+              />
+              <Typography
+                onClick={handlePhoneClick}
+                sx={{ cursor: "pointer", color: "#fff", ml: 1 }}
+              >
+                1800-889-8358
+              </Typography>
+            </Box>
           </Box>
+
           {(isExpanded || (!isSmallScreen && !isXSmallScreen)) && (
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
                 gap: "5px",
                 flexWrap: "wrap",
+                // mt: isSmallScreen ? 1 : 0, // Add margin-top for small screens
               }}
             >
               <FormControl variant="standard" sx={{ color: "#fff" }}>
                 <Select
+                  labelId="currency-select-label"
+                  id="currency-select"
                   value={currency}
                   onChange={handleChange}
                   label="Currency"
