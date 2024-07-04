@@ -25,7 +25,7 @@ function Login({ onClose }) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [showModal, setShowModal] = useState(true);
-  const [timer, setTimer] = useState(60); // Timer in seconds
+  const [timer, setTimer] = useState(10); // Timer in seconds
   const [resendDisabled, setResendDisabled] = useState(false);
   const dispatch = useDispatch();
 
@@ -41,6 +41,11 @@ function Login({ onClose }) {
     }
     return () => clearInterval(interval);
   }, [otpSent, timer]);
+
+  const formatSeconds = (seconds) => {
+    const sec = Math.max(0, Math.min(seconds, 59));
+    return sec < 10 ? `0${sec}` : `${sec}`;
+  };
 
   const handleChange = (newValue) => {
     setOtp(newValue);
@@ -68,7 +73,7 @@ function Login({ onClose }) {
 
         setLoading(false);
         setOtpSent(true);
-        setTimer(60); // Start timer when OTP is sent
+        setTimer(10); // Start timer when OTP is sent
         setSnackbarMessage("OTP sent successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -145,6 +150,7 @@ function Login({ onClose }) {
       }
 
       setLoading(false);
+      setOtp("");
       setOtpSent(true);
       setTimer(10); // Start timer again when OTP is resent
       setSnackbarMessage("OTP resent successfully!");
@@ -247,10 +253,10 @@ function Login({ onClose }) {
                 variant="h6"
                 sx={{
                   textAlign: "center",
-                  mb: 4,
+                  mb: 2,
                   color: "grey",
                   fontWeight: "400",
-                  fontSize: "14px",
+                  fontSize: { xs: "12px", sm: "12px", md: "14px", lg: "14px" },
                 }}
               >
                 A 6-digit OTP has been sent to your phone number.
@@ -284,13 +290,6 @@ function Login({ onClose }) {
                 />
               </Box>
 
-              <Typography
-                variant="body2"
-                lineHeight={3}
-                sx={{ textAlign: "start", mb: 2 }}
-              >
-                ({timer}s left)
-              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -307,6 +306,7 @@ function Login({ onClose }) {
                     width: "100% !important",
                     textTransform: "none",
                     cursor: "pointer",
+                    mt: 2,
                   }}
                   disabled={!otp || loading}
                 >
@@ -318,19 +318,31 @@ function Login({ onClose }) {
                 </Button>
               </Box>
 
+              {timer > 0 && (
+                <Typography
+                  variant="body2"
+                  lineHeight={3}
+                  sx={{
+                    textAlign: "center",
+                    color: "#3399CC",
+                    fontSize: "15px",
+                  }}
+                >
+                  00:{formatSeconds(timer)}
+                </Typography>
+              )}
+
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   gap: "5px",
-                  marginTop: "10px",
                 }}
               >
                 <Typography
                   variant="h6"
                   sx={{
                     textAlign: "center",
-                    mb: 2,
                     color: "#2B3445",
                     fontSize: "14px",
                   }}
