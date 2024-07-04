@@ -170,7 +170,7 @@ const Home = () => {
 return (
     <div>
       <Box sx={{ backgroundColor: "#f4f4f4" }}>
-        <Container sx={{ mt: 10 }}>
+        <Container sx={{ mt: 11 }}>
           <Grid
             container
             spacing={4}
@@ -268,7 +268,7 @@ return (
 
                   sx={{
                     width: { md: '30%', sm: '50%', xs: '60%' },
-                    maxWidth: 700,
+                    maxWidth: 350,
                     bgcolor: 'background.paper',
                     borderRadius: 2,
                     boxShadow: 24,
@@ -702,7 +702,7 @@ return (
                           alignItems="baseline"
                           sx={{
                             flexWrap: "nowrap",
-                            gap: "20px",
+                            gap: "43px",
                             "@media (max-width: 900px)": {
                               flexWrap: "wrap",
                               justifyContent: "center",
@@ -964,7 +964,7 @@ return (
                           alignItems="baseline"
                           sx={{
                             flexWrap: "nowrap",
-                            gap: "20px",
+                            gap: "43px",
                             "@media (max-width: 900px)": {
                               flexWrap: "wrap",
                               justifyContent: "center",
@@ -1225,7 +1225,7 @@ return (
                           alignItems="baseline"
                           sx={{
                             flexWrap: "nowrap",
-                            gap: "20px",
+                            gap: "43px",
                             "@media (max-width: 900px)": {
                               flexWrap: "wrap",
                               justifyContent: "center",

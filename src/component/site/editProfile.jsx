@@ -8,13 +8,13 @@ import {
   TextField,
   Snackbar,
   SnackbarContent,
+  CircularProgress,
 } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import validator from "validator";
 import axiosInstance from "../../util/axiosInstance";
-import { Image } from "../../../lib";
-import { setUserDetail } from "../../redux/auth/authSlice"
+import { setUserDetail } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
 
 const style = {
@@ -40,18 +40,21 @@ const EditProfile = ({ onClose }) => {
     zip: "",
     phone: "",
   });
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [profilePicture, setProfilePicture] = useState(null);
+  const [oldProfilePictureUrl, setOldProfilePictureUrl] = useState(null);
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProfile();
   }, []);
 
   const getProfile = async () => {
+    setLoading(true);
     try {
       const { data } = await axiosInstance.get("user/profile");
       if (data.status && data.profile) {
@@ -60,22 +63,20 @@ const EditProfile = ({ onClose }) => {
           name: userProfile.name || "",
           email: userProfile.email || "",
           type: userProfile.address.type,
-          address: userProfile.address
-            ? userProfile.address.addressLine1 || ""
-            : "",
-          city: userProfile.address ? userProfile.address.city || "" : "",
-          state: userProfile.address ? userProfile.address.state || "" : "",
-          country: userProfile.address ? userProfile.address.country || "" : "",
-          zip: userProfile.address ? userProfile.address.zip || "" : "",
+          address: userProfile.address?.addressLine1 || "",
+          city: userProfile.address?.city || "",
+          state: userProfile.address?.state || "",
+          country: userProfile.address?.country || "",
+          zip: userProfile.address?.zip || "",
           phone: userProfile.phone || "",
         });
-        setProfilePicture(
-          userProfile.profile && Image(userProfile.profile)
-        );
+        setProfilePicture(`https://api.digibulkmarketing.com${userProfile.profile}`);
+        setOldProfilePictureUrl(userProfile.profile);
       }
     } catch (error) {
       console.error("Error fetching profile data", error);
     }
+    setLoading(false);
   };
 
   const MAX_FILE_SIZE = 800 * 1024;
@@ -139,6 +140,7 @@ const EditProfile = ({ onClose }) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      URL.revokeObjectURL(profilePicture);
       return data.downloadUrl;
     } catch (error) {
       console.error("Error uploading profile picture", error);
@@ -158,12 +160,12 @@ const EditProfile = ({ onClose }) => {
         state: profile.state,
         zip: profile.zip,
       },
-      profile: profilePictureUrl,
+      profile: profilePictureUrl || oldProfilePictureUrl,
     };
-    
+
     try {
       const { data } = await axiosInstance.post("auth/set-profile", formData);
-      dispatch(setUserDetail(formData))
+      dispatch(setUserDetail(formData));
       onClose();
     } catch (error) {
       console.error("Error updating profile", error);
@@ -174,12 +176,16 @@ const EditProfile = ({ onClose }) => {
     const validationErrors = validateFields();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setSnackbarMessage("Please correct the highlighted errors");
+      setSnackbarOpen(true);
     } else {
+      setLoading(true);
       const profilePictureUrl = await uploadProfilePicture();
       await updateProfile(profilePictureUrl);
+      setLoading(false);
     }
-    setSnackbarOpen(false);
   };
+
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -189,184 +195,184 @@ const EditProfile = ({ onClose }) => {
 
   return (
     <Box
-      sx={{
-        ...style,
-        width: "90%",
-        maxWidth: { xs: 250, md: 600 },
-        height: { xs: "70vh", md: "auto" },
-        overflow: "auto",
-      }}
-    >
-      <Typography fontSize={"26px"} fontWeight={300} gutterBottom>
-        Edit Profile
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={3} sx={{ textAlign: "center" }}>
-          <Avatar
-            alt="Profile"
-            src={profilePicture}
-            sx={{
-              width: 100,
-              height: 100,
-              margin: "0 auto",
-              cursor: "pointer",
+    sx={{
+      ...style,
+      width: "90%",
+      maxWidth: { xs: 250, md: 600 },
+      height: { xs: "70vh", md: "auto" },
+      overflow: "auto",
+    }}
+  >
+    <Typography fontSize={"26px"} fontWeight={300} gutterBottom>
+      Edit Profile
+    </Typography>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={3} sx={{ textAlign: "center" }}>
+        <Avatar
+          alt="Profile"
+          src={profilePicture}
+          sx={{
+            width: 100,
+            height: 100,
+            margin: "0 auto",
+            cursor: "pointer",
+          }}
+          onClick={() =>
+            document.getElementById("profile-picture-upload").click()
+          }
+        />
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          id="profile-picture-upload"
+          onChange={handleFileChange}
+        />
+      </Grid>
+      <Grid item xs={12} md={9} container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            value={profile.name}
+            variant="outlined"
+            required
+            error={!!errors.name}
+            helperText={errors.name}
+            onChange={handleInputChange}
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <PhoneInput
+            inputStyle={{
+              width: "100%",
+              height: "40px",
+              fontFamily: "Monospace",
+              border: "1px solid #AEB4BE",
             }}
-            onClick={() =>
-              document.getElementById("profile-picture-upload").click()
+            country={"in"}
+            value={profile.phone}
+            onChange={(phone) =>
+              setProfile((prevProfile) => ({
+                ...prevProfile,
+                phone,
+              }))
             }
-          />
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            id="profile-picture-upload"
-            onChange={handleFileChange}
+            inputProps={{
+              name: "phone",
+              required: true,
+            }}
           />
         </Grid>
-        <Grid item xs={12} md={9} container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Name"
-              name="name"
-              value={profile.name}
-              variant="outlined"
-              required
-              error={!!errors.name}
-              helperText={errors.name}
-              onChange={handleInputChange}
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <PhoneInput
-              inputStyle={{
-                width: "100%",
-                height: "40px",
-                fontFamily: "Monospace",
-                border: "1px solid #AEB4BE",
-              }}
-              country={"in"}
-              value={profile.phone}
-              onChange={(phone) =>
-                setProfile((prevProfile) => ({
-                  ...prevProfile,
-                  phone,
-                }))
-              }
-              inputProps={{
-                name: "phone",
-                required: true,
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Email Address"
-              name="email"
-              value={profile.email}
-              required
-              error={!!errors.email}
-              helperText={errors.email}
-              onChange={handleInputChange}
-              size="small"
-            />
-          </Grid>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Email Address"
+            name="email"
+            value={profile.email}
+            required
+            error={!!errors.email}
+            helperText={errors.email}
+            onChange={handleInputChange}
+            size="small"
+          />
         </Grid>
-        <Grid item xs={12} container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Your Address"
-              name="address"
-              multiline
-              rows={5}
-              required
-              value={profile.address}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Your City"
-                  name="city"
-                  value={profile.city}
-                  required
-                  error={!!errors.city}
-                  helperText={errors.city}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Your State"
-                  size="small"
-                  name="state"
-                  value={profile.state}
-                  required
-                  error={!!errors.state}
-                  helperText={errors.state}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Country"
-                  size="small"
-                  name="country"
-                  value={profile.country}
-                  required
-                  error={!!errors.country}
-                  helperText={errors.country}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  fullWidth
-                  label="Zip Code"
-                  size="small"
-                  name="zip"
-                  value={profile.zip}
-                  required
-                  error={!!errors.zip}
-                  helperText={errors.zip}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  onClick={handleSave}
-                >
-                  Save
-                </Button>
-              </Grid>
+      </Grid>
+      <Grid item xs={12} container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <TextField
+            fullWidth
+            label="Your Address"
+            name="address"
+            multiline
+            rows={5}
+            required
+            value={profile.address}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Your City"
+                name="city"
+                value={profile.city}
+                required
+                error={!!errors.city}
+                helperText={errors.city}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Your State"
+                size="small"
+                name="state"
+                value={profile.state}
+                required
+                error={!!errors.state}
+                helperText={errors.state}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Country"
+                size="small"
+                name="country"
+                value={profile.country}
+                required
+                error={!!errors.country}
+                helperText={errors.country}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Zip Code"
+                size="small"
+                name="zip"
+                value={profile.zip}
+                required
+                error={!!errors.zip}
+                helperText={errors.zip}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                onClick={handleSave}
+              >
+                Save
+              </Button>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      >
-        <SnackbarContent
-          message={snackbarMessage}
-          sx={{ backgroundColor: "#0084fe", color: "#fff" }}
-        />
-      </Snackbar>
-    </Box>
+    </Grid>
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={handleSnackbarClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+    >
+      <SnackbarContent
+        message={snackbarMessage}
+        sx={{ backgroundColor: "#0084fe", color: "#fff" }}
+      />
+    </Snackbar>
+  </Box>
   );
 };
 

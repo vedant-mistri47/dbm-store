@@ -267,7 +267,7 @@ const Navbar = () => {
                   sx={{ p: 0 }}
                 >
                   <Avatar
-                    alt="Profile Picture"
+                    alt=""
                     src={Image(userDetails?.profile)}
                     sx={{ width: 35, height: 35 }}
                   />
@@ -425,7 +425,7 @@ const Navbar = () => {
               <MenuItem
                 onClick={handleCloseUserMenu}
                 data-item="Name"
-                sx={{ fontSize: "10px" }}
+                sx={{ fontSize: "15px" }}
               >
                 {userDetails?.name}
               </MenuItem>
