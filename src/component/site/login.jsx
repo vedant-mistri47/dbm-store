@@ -13,6 +13,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setToken, setUserDetail } from "../../redux/auth/authSlice";
 import axiosInstance from "../../util/axiosInstance";
+import logo from "../image/logo (1).png";
 
 function Login({ onClose }) {
   const [number, setNumber] = useState("");
@@ -24,7 +25,8 @@ function Login({ onClose }) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [showModal, setShowModal] = useState(true);
-  const [timer, setTimer] = useState(10); // Timer in seconds
+  const [timer, setTimer] = useState(60); // Timer in seconds
+  const [resendDisabled, setResendDisabled] = useState(false);
   const dispatch = useDispatch();
 
   // Countdown timer effect
@@ -34,6 +36,8 @@ function Login({ onClose }) {
       interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
+    } else {
+      setResendDisabled(false); // Reset resend button when timer completes
     }
     return () => clearInterval(interval);
   }, [otpSent, timer]);
@@ -64,7 +68,7 @@ function Login({ onClose }) {
 
         setLoading(false);
         setOtpSent(true);
-        setTimer(10); // Start timer when OTP is sent
+        setTimer(60); // Start timer when OTP is sent
         setSnackbarMessage("OTP sent successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -156,6 +160,12 @@ function Login({ onClose }) {
     }
   };
 
+  const handleChangeNumber = () => {
+    setOtpSent(false);
+    setOtp("");
+    setError(null);
+  };
+
   return (
     <>
       {showModal && (
@@ -166,7 +176,7 @@ function Login({ onClose }) {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: { xs: "80%", sm: 250, md: 300 },
+            maxWidth: { xs: "80%", sm: 250, md: 300, lg: 400 },
             bgcolor: "background.paper",
             boxShadow: 24,
             p: { xs: 2, sm: 3, md: 4 },
@@ -178,11 +188,72 @@ function Login({ onClose }) {
         >
           {otpSent ? (
             <>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <img src={logo} alt="Logo" width="50%" />
+              </Box>
               <Typography
                 variant="h6"
-                sx={{ textAlign: "center", mb: 1 }}
+                sx={{
+                  textAlign: "center",
+                  mb: 1,
+                  fontWeight: "700",
+                  color: "#2B3445",
+                  fontSize: "16px",
+                }}
               >
-                Enter OTP
+                Welcome To Digi Bulk Marketing
+              </Typography>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center", // Center vertically
+                  gap: 1,
+                  mb: 1,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                  }}
+                >
+                  +{number}
+                </Typography>
+                <Typography
+                  component="a"
+                  href="#"
+                  onClick={handleChangeNumber}
+                  variant="body2"
+                  sx={{
+                    color: "#3399CC",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                    textDecoration: "none",
+                  }}
+                >
+                  Change Number
+                </Typography>
+              </Box>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  mb: 4,
+                  color: "grey",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                }}
+              >
+                A 6-digit OTP has been sent to your phone number.
               </Typography>
               <Box
                 sx={{
@@ -212,14 +283,14 @@ function Login({ onClose }) {
                   }}
                 />
               </Box>
-             
-                  <Typography
-                 variant="body2"
-                 lineHeight={3}
-                 sx={{ textAlign: "start", mb: 2 }}
-               >
-                 ({timer}s left)
-               </Typography>
+
+              <Typography
+                variant="body2"
+                lineHeight={3}
+                sx={{ textAlign: "start", mb: 2 }}
+              >
+                ({timer}s left)
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -230,25 +301,73 @@ function Login({ onClose }) {
                 <Button
                   variant="contained"
                   onClick={handleVerifyOtp}
-                  sx={{ backgroundColor: "#0084fe", color: "#fff", width: "120px" }}
+                  sx={{
+                    backgroundColor: "#3399CC !important",
+                    color: "#fff !important",
+                    width: "100% !important",
+                    textTransform: "none",
+                    cursor: "pointer",
+                  }}
                   disabled={!otp || loading}
                 >
                   {loading ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
-                    "Submit"
+                    "Verify & Proceed"
                   )}
                 </Button>
-                {timer === 0 && (
-                  <Button
-                    variant="text"
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "5px",
+                  marginTop: "10px",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    textAlign: "center",
+                    mb: 2,
+                    color: "#2B3445",
+                    fontSize: "14px",
+                  }}
+                >
+                  Did not receive OTP?
+                </Typography>
+
+                {timer === 0 ? (
+                  <Typography
+                    variant="h6"
                     onClick={handleResendOtp}
-                    sx={{ color: "#0084fe" }}
+                    sx={{
+                      color: "#D23F57 !important",
+                      textTransform: "none",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      fontWeight: "600",
+                    }}
                   >
                     Resend OTP
-                  </Button>
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "#808080 !important",
+                      textTransform: "none",
+                      fontSize: "14px",
+                      cursor: "not-allowed",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Resend OTP
+                  </Typography>
                 )}
               </Box>
+
               {error && (
                 <Typography
                   variant="body2"
@@ -261,7 +380,35 @@ function Login({ onClose }) {
             </>
           ) : (
             <>
-              <Typography variant="h6" sx={{ textAlign: "center", mb: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <img src={logo} alt="Logo" width="50%" />
+              </Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  mb: 2,
+                  fontWeight: "700",
+                  color: "#2B3445",
+                  fontSize: "16px",
+                }}
+              >
+                Welcome To Digi Bulk Marketing
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  mb: 2,
+                  fontSize: "14px",
+                  color: "grey",
+                }}
+              >
                 Enter Phone Number
               </Typography>
               <PhoneInput
@@ -291,7 +438,15 @@ function Login({ onClose }) {
                 variant="contained"
                 onClick={handleSendOtp}
                 disabled={!number || loading}
-                sx={{ mt: 2, backgroundColor: "#0084fe", color: "#fff" }}
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#3399CC",
+                  color: "#fff",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#3399CC",
+                  },
+                }}
               >
                 {loading ? (
                   <CircularProgress size={24} color="inherit" />
@@ -332,4 +487,3 @@ function Login({ onClose }) {
 }
 
 export default Login;
-
