@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -29,6 +30,14 @@ const logos = [
   { src: coronaLogo, alt: "Corona Logo" },
 ];
 
+const chunkArray = (array, chunkSize) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
+};
+
 const About = () => {
   const [aboutUs, setAboutUs] = useState([]);
 
@@ -51,22 +60,26 @@ const About = () => {
       // Even index: text first, then image
       return (
         <>
-          <Grid item xs={12} md={7}>
-            <CardContent>
+          <Grid item xs={12} md={7} mt={5}>
+            <CardContent sx={{ textAlign: 'left' }} >
               <Typography variant="subtitle" gutterBottom fontWeight={600}>
                 {section.title}
               </Typography>
               <Typography
-                variant="body1"
+                variant="body"
                 gutterBottom
+                display={'flex'}
+               
+                flexDirection={'column'}
                 color={"#1783FE"}
                 margin={"10px 0"}
               >
                 {section.subtitle}
               </Typography>
               <Typography
-                variant="body1"
+                variant="body"
                 gutterBottom
+                display={'flex'}
                 align="justify"
                 margin={"20px 0px"}
               >
@@ -75,7 +88,7 @@ const About = () => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "center",
+                  justifyContent: "flex-end",
                   marginTop: "30px",
                 }}
               >
@@ -92,7 +105,7 @@ const About = () => {
               </Box>
             </CardContent>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={5} mt={7}>
             <Box
               sx={{
                 display: "flex",
@@ -105,7 +118,7 @@ const About = () => {
               <img
                 src={Image(section.image)}
                 alt="Section Image"
-                style={{ maxWidth: "100%" }}
+                style={{ maxWidth: "70%" }}
               />
             </Box>
           </Grid>
@@ -115,49 +128,59 @@ const About = () => {
       // Odd index: image first, then text
       return (
         <>
-          <Grid item xs={12} md={5}>
-            {section.image && (<Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "auto",
-                width: { xs: "80%", sm: "100%", md: "100%" },
-              }}
-            >
-              <img
-                src={Image(section.image)}
-                style={{ maxWidth: "100%" }}
-              />
-            </Box>)}
-            <Grid md={11} xs={12} mt={10} >
-
-         
-            {section.logo && section.logo?.map(item => (
-              
-              <img
-              src={Image(item)}
-              style={{ maxWidth: "100%" }}
-            />
-            ))}
-               </Grid>
+          <Grid item xs={12} md={5} mt={5}>
+            {section.image && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: "auto",
+                  width: { xs: "60%", sm: "80%", md: "80%" },
+                }}
+              >
+                <img
+                  src={Image(section.image)}
+                  alt="Section Image"
+                  style={{ maxWidth: "100%" }}
+                />
+              </Box>
+            )}
+            <Grid container direction="column" spacing={2} mt={2}>
+              {section.logo && chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
+                <Grid container item spacing={2} key={rowIdx}>
+                  {logoRow.map((item, idx) => (
+                    <Grid item xs={4} key={idx}>
+                      <img
+                        src={Image(item)}
+                        alt="Logo"
+                        style={{ maxWidth: "100%" }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={7}>
-            <CardContent>
+          <Grid item xs={12} md={7} mt={3}>
+            <CardContent sx={{ textAlign: 'left' }}>
               <Typography variant="subtitle" gutterBottom fontWeight={600}>
                 {section.title}
               </Typography>
               <Typography
-                variant="body1"
+                variant="body"
                 gutterBottom
+                display={'flex'}
+                flexDirection={'column'}
                 color={"#1783FE"}
                 margin={"10px 0"}
               >
                 {section.subtitle}
               </Typography>
               <Typography
-                variant="body1"
+                variant="body"
                 gutterBottom
+                display={'flex'}
                 align="justify"
                 margin={"20px 0px"}
               >
@@ -172,12 +195,11 @@ const About = () => {
 
   return (
     <Container sx={{ bgcolor: "#F4F4F4", padding: 4 }}>
-      {aboutUs?.map((section, index) => (
-        <Grid container spacing={4} alignItems="center" key={section._id}>
+      {aboutUs.map((section, index) => (
+        <Grid container spacing={4} alignItems="flex-start" key={section._id}>
           {renderContent(section, index)}
         </Grid>
       ))}
-
 
       <Card
         sx={{
@@ -205,6 +227,7 @@ const About = () => {
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
+                
               >
                 <img
                   src={imgv}
@@ -214,7 +237,7 @@ const About = () => {
                 <Typography variant="h6" fontWeight={900} marginTop={2}>
                   {item.title}
                 </Typography>
-                <Typography variant="body1">{item.description}</Typography>
+                <Typography variant="body">{item.description}</Typography>
               </Box>
             </Grid>
           ))}
