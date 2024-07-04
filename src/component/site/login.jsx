@@ -25,7 +25,7 @@ function Login({ onClose }) {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [showModal, setShowModal] = useState(true);
-  const [timer, setTimer] = useState(10); // Timer in seconds
+  const [timer, setTimer] = useState(60); // Timer in seconds
   const [resendDisabled, setResendDisabled] = useState(false);
   const dispatch = useDispatch();
 
@@ -73,7 +73,7 @@ function Login({ onClose }) {
 
         setLoading(false);
         setOtpSent(true);
-        setTimer(10); // Start timer when OTP is sent
+        setTimer(60); // Start timer when OTP is sent
         setSnackbarMessage("OTP sent successfully!");
         setSnackbarSeverity("success");
         setSnackbarOpen(true);
@@ -337,6 +337,7 @@ function Login({ onClose }) {
                   display: "flex",
                   justifyContent: "center",
                   gap: "5px",
+                  mt: 1
                 }}
               >
                 <Typography
