@@ -32,7 +32,7 @@ const Checkout = ({ onClose }) => {
     const [selectedOption, setSelectedOption] = useState('home');
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('razorpay');
     const products = useSelector(state => state.payment.productDetails);
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    // const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const subtotal = useSelector(state => state.cart.subtotal);
     const { currency, exchangeRates } = useSelector((state) => state.currency);
     const currencySymbol = CURRENCIES_SYMBOL[currency]
@@ -136,12 +136,24 @@ const Checkout = ({ onClose }) => {
     const PlaceOrder = async (userData) => {
         try {
             const paymentdata = {
-                userData,
+                // userData,
                 currency: currency,
                 payment_method: selectedPaymentMethod,
                 items: products
             };
-            const response = await axiosInstance.post("/orders/place-order", paymentdata);
+
+            // const paymentdata = {
+            //     "currency":"USD",
+            //     "payment_method":"paypal",
+            //     "items":[{
+            //     "product_id": "6644a5b13a3674779359ac39",
+            //     "variation_id": "65926b53dbba6d34a8996e35",
+            //     "quantity":2
+            //   }]
+            // }
+            
+            console.log(paymentdata);
+            const response = await axiosInstance.post("orders/place-order",JSON.stringify(paymentdata));
             console.log(response)
             if (response.data.status) {
                 if (selectedPaymentMethod === "razorpay") {
@@ -149,12 +161,12 @@ const Checkout = ({ onClose }) => {
                 } else if (selectedPaymentMethod === 'stripe') {
                     makeStripePayment(response?.data?.result.url, "pk_test_51L1E9YSFDFHp5bEhFLrxuBRiZ0ifZQE5Nle0k1szQOzv3H3fOG0UXU2QsxbBzvGJYBDqsFN73f0P58hWVpFJYddC00qtpMYQRs");
                 } else if (selectedPaymentMethod === 'paypal') {
-                    makePaypalPayment(response?.approval_url);
+                    makePaypalPayment(response?.data?.approval_url);
                 } else {
                     console.log("Please choose a payment method!");
                 }
             } else {
-                console.log("Please choose a payment method!");
+                console.log("place order failed");
             }
         } catch (err) {
             console.log(err);

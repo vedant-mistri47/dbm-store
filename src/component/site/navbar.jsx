@@ -309,6 +309,7 @@ const Navbar = () => {
                 onClose={toggleCartDrawer(false)}
                 onClick={toggleCheckoutDrawer(true)}
                 openProduct={toggleDetailsDrawer(true)}
+                openLogin={handleLoginModal(true)}
               />
             </Drawer>
 
