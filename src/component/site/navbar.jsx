@@ -332,6 +332,7 @@ const Navbar = () => {
               <ProductDetails
                 onClose={toggleDetailsDrawer(false)}
                 product={drawerProduct}
+                onClick={toggleCartDrawer(true)}
                 cartDrawer={
                   <Badge badgeContent={cartItemCount} color="primary">
                     <Box

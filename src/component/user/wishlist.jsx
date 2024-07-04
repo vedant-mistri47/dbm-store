@@ -12,8 +12,8 @@ const Wishlist = ({ onClose }) => {
     const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const wishlistItems = useSelector((state) => state.wishlist.items);
-    const {currency , exchangeRates} = useSelector((state) => state.currency);
-    const currencySymbol = CURRENCIES_SYMBOL[currency]
+    const { currency, exchangeRates } = useSelector((state) => state.currency);
+    const currencySymbol = CURRENCIES_SYMBOL[currency];
     const dispatch = useDispatch();
 
     const handleRemoveFromWishlist = (index) => {
@@ -46,24 +46,32 @@ const Wishlist = ({ onClose }) => {
                     container
                     sx={{ borderRadius: '15px' }}
                     p={2}
-                    my={5}
+                    my={2}
                     boxShadow="0 0 10px #eee"
-                    justifyContent="space-between"
+                    alignItems="center"
+
                 >
-                    <Grid item xs={12} md={4} sx={{ borderRadius: '15px', backgroundColor: '#FBF5EC', textAlign: 'center' }}>
-                        <img width={85} height={85} src={item.product?.image} alt="Product" />
+                    <Grid item xs={3} md={3} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                        <img width={60} height={60} src={item.product?.image} alt="Product" />
                     </Grid>
-                    <Grid item xs={12} md={7} container direction="column" justifyContent="space-between">
-                        <Typography>{item.product?.name}</Typography>
+                    <Grid item xs={9} md={7} container direction="column">
+                        <Grid display={'flex'}>
+
+                        <Typography variant='body1'>{item.product?.name}</Typography>
+
+                    
+
+
+                        </Grid>
                         <Grid container justifyContent='space-between' alignItems='center'>
                             <Grid container item xs={6} justifyContent='space-between'>
-                                <Typography sx={{ color: '#818181de' }}>Price</Typography>
-                                <Typography>
+                                <Typography variant='body2' sx={{ color: '#818181de' }}>Price</Typography>
+                                <Typography variant='body2'>
                                     ₹{item.product?.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity)} -
                                     ₹{item.product?.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity)}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={6} textAlign='end'>
+                            <Grid item xs={1} mb={1}>
                                 <Checkbox
                                     onChange={() => handleRemoveFromWishlist(index)}
                                     icon={<FavoriteBorder />}
@@ -81,11 +89,11 @@ const Wishlist = ({ onClose }) => {
                 onClose={handleCloseSnackbar}
                 message={snackbarMessage}
             >
-                        <SnackbarContent
-          message={snackbarMessage}
-          sx={{ backgroundColor: "#4caf50", color: "#fff" }}
-        />
-      </Snackbar>
+                <SnackbarContent
+                    message={snackbarMessage}
+                    sx={{ backgroundColor: "#4caf50", color: "#fff" }}
+                />
+            </Snackbar>
         </Box>
     );
 };
