@@ -113,7 +113,7 @@ const EditProfile = ({ onClose }) => {
       errors.email = "Invalid email address";
     }
     if (!validator.isNumeric(profile.zip)) {
-      errors.zip = "Zip code must contain only numbers";
+      errors.zip = "Zip code must contain only 6 numbers";
     }
     if (!validator.isAlpha(profile.state.replace(/\s/g, ""))) {
       errors.state = "State must contain only letters";
@@ -345,6 +345,10 @@ const EditProfile = ({ onClose }) => {
                 error={!!errors.zip}
                 helperText={errors.zip}
                 onChange={handleInputChange}
+                inputProps={{
+                  maxLength: 6,
+                  pattern: "\\d{6}", 
+                }}
               />
             </Grid>
             <Grid item xs={6}>
