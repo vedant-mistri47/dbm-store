@@ -26,9 +26,10 @@ import {
 import { setProductDetails } from "../../redux/payment/paymentSlice";
 import { CURRENCIES_SYMBOL } from "../currency/currency";
 
-const Cart = ({ onClose, onClick, openProduct }) => {
+const Cart = ({ onClose, onClick, openProduct , openLogin }) => {
   const cartData = useSelector((state) => state.cart.items);
   const subtotal = useSelector((state) => state.cart.subtotal);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const { currency, exchangeRates } = useSelector((state) => state.currency);
   const currencySymbol = CURRENCIES_SYMBOL[currency];
   const dispatch = useDispatch();
@@ -299,7 +300,7 @@ const Cart = ({ onClose, onClick, openProduct }) => {
             color="black"
             sx={{ color: "#fff", borderRadius: 2, mt: 2 }}
             fullWidth
-            onClick={handleCheckout}
+            onClick={isLoggedIn ? handleCheckout : openLogin}
           >
             Checkout Now
           </Button>

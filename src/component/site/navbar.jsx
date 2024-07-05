@@ -35,7 +35,6 @@ import OrderDetails from "../user/orderDetails";
 import EditProfile from "./editProfile";
 import Wishlist from "../user/wishlist";
 import { Logout } from "@mui/icons-material";
-import { store } from "../../redux/store";
 import { useSelector } from "react-redux";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useDispatch } from "react-redux";
@@ -80,7 +79,12 @@ const Navbar = () => {
   };
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const handleLoginModal = (newOpen) => () => setOpenLoginModal(newOpen);
+  const handleLoginModal = (newOpen) => () => {
+    setOpenLoginModal(newOpen)
+    if(newOpen){
+      setOpenCart(false)
+    }
+  };
   const handleClick = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
@@ -309,6 +313,7 @@ const Navbar = () => {
                 onClose={toggleCartDrawer(false)}
                 onClick={toggleCheckoutDrawer(true)}
                 openProduct={toggleDetailsDrawer(true)}
+                openLogin={handleLoginModal(true)}
               />
             </Drawer>
 
