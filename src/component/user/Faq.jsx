@@ -374,8 +374,8 @@ const Faq = () => {
                         label="Phone"
                         variant="standard"
                         fullWidth
-                        error={!!errors.phone}
-                        helperText={errors.phone ? errors.phone.message : ""}
+                        // error={!!errors.phone}
+                        // helperText={errors.phone ? errors.phone.message : ""}
                       />
                     )}
                   />
