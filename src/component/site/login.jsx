@@ -301,7 +301,7 @@ function Login({ onClose }) {
                   variant="contained"
                   onClick={handleVerifyOtp}
                   sx={{
-                    backgroundColor: "#3399CC !important",
+                    backgroundColor: "#0084FE !important",
                     color: "#fff !important",
                     width: "100% !important",
                     textTransform: "none",
@@ -324,7 +324,7 @@ function Login({ onClose }) {
                   lineHeight={3}
                   sx={{
                     textAlign: "center",
-                    color: "#3399CC",
+                    color: "#0084FE",
                     fontSize: "15px",
                   }}
                 >
@@ -453,11 +453,11 @@ function Login({ onClose }) {
                 disabled={!number || loading}
                 sx={{
                   mt: 2,
-                  backgroundColor: "#3399CC",
+                  backgroundColor: "#0084FE",
                   color: "#fff",
                   textTransform: "none",
                   "&:hover": {
-                    backgroundColor: "#3399CC",
+                    backgroundColor: "#0084FE",
                   },
                 }}
               >

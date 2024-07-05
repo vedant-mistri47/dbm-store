@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { store } from '.././redux/store';
 const axiosInstance = axios.create({
-  baseURL: 'https://api.digibulkmarketing.com/',
+  baseURL: 'https://api-test.digibulkmarketing.com/',
 });
 axiosInstance.interceptors.request.use((config) => {
   const state = store.getState();

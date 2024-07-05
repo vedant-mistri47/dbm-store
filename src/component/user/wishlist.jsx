@@ -52,7 +52,7 @@ const Wishlist = ({ onClose }) => {
           key={index}
           container
           sx={{ borderRadius: "15px",position: "relative" }}
-          p={2}
+          p={0.5}
           my={2}
           boxShadow="0 0 10px #eee"
           alignItems="center"
@@ -84,9 +84,9 @@ const Wishlist = ({ onClose }) => {
             </Grid>
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid container item xs={6} justifyContent="space-between">
-                <Typography variant="body2" sx={{ color: "#818181de" }}>
+                {/* <Typography variant="body2" sx={{ color: "#818181de" }}>
                   Price
-                </Typography>
+                </Typography> */}
                 <Typography variant="body2">
                   ₹
                   {item.product?.rates.reduce(
