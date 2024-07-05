@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Container,
   Grid,
   TextField,
@@ -80,7 +81,7 @@ const Faq = () => {
   const [products, setProducts] = useState(null);
   const [faqData, setFaqData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     control,
@@ -88,8 +89,20 @@ const Faq = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.post("/app/contact-form", data);
+      console.log("Form submission response:", response.data);
+      // Optionally handle success response or show notification
+      // Reset form after successful submission
+      reset();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle error state or show error notification
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -120,12 +133,9 @@ const Faq = () => {
           master_reseller_id: "626f85e0544a264104223e37",
           product_id: "62677b1d52f74219882d4f38",
         });
-        // Assuming your API returns an array of FAQ objects in response.data
         setFaqData(response.data.product.faqs);
-        // console.log(("response data is : ", response.data));
       } catch (error) {
         console.error("Error fetching FAQ data:", error);
-        // Handle error states as needed
       }
     };
 
@@ -360,7 +370,7 @@ const Faq = () => {
                     render={({ field }) => (
                       <TextField
                         {...field}
-                        type="number"
+                        type="text"
                         label="Phone"
                         variant="standard"
                         fullWidth
@@ -448,9 +458,19 @@ const Faq = () => {
                       type="submit"
                       variant="contained"
                       color="primary"
-                      sx={{ width: "100px", height: "40px" }}
+                      sx={{
+                        width: "100px",
+                        height: "40px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      Submit
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </Box>
                 </Grid>
