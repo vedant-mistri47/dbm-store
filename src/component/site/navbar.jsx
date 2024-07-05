@@ -386,7 +386,6 @@ const Navbar = () => {
             >
               <Login
                 onClose={handleLoginModal(false)}
-                onLogin={() => setIsLoggedIn(true)}
               />
             </Modal>
 

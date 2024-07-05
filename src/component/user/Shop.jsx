@@ -43,6 +43,7 @@ import { cartProduct } from "../../redux/cart/cartSlice";
 import { addToWishlist, removeFromWishlist } from '../../redux/wishlist/wishlistSlice';
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { CURRENCIES_SYMBOL } from "../currency/currency"
+import Login from "../site/login";
 
 const useStyles = makeStyles({
   carousel: {
@@ -125,6 +126,7 @@ const CustomButtonGroup = ({ next, previous }) => (
 
 const Shop = () => {
   const cartItemCount = useSelector((state) => state.cart?.items.length);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const { currency, exchangeRates } = useSelector((state) => state.currency);
   const currencySymbol = CURRENCIES_SYMBOL[currency]
@@ -143,6 +145,13 @@ const Shop = () => {
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleLoginModal = (newOpen) => () => {
+    setOpenLoginModal(newOpen)
+    if (newOpen) {
+      setCartDrawer(false)
+    }
+  };
 
   const toggleDetailDrawer =
     (newOpen, product = null) =>
@@ -406,7 +415,7 @@ const Shop = () => {
                           },
                         }}
                       >
-                        <Checkbox sx={{ position: 'absolute' , top: 0, right: 0}} onClick={(e) => handleWishlist(item , e)} icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={wishlistItems.some(wishlistItem => wishlistItem.product.id === item.id)} />
+                        <Checkbox sx={{ position: 'absolute', top: 0, right: 0 }} onClick={(e) => handleWishlist(item, e)} icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={wishlistItems.some(wishlistItem => wishlistItem.product.id === item.id)} />
                         <img
                           width={220}
                           height={220}
@@ -647,7 +656,7 @@ const Shop = () => {
                       <iframe
                         width="100%"
                         height="400"
-                       // src={selectedProduct?.demoVideoUrl}
+                        // src={selectedProduct?.demoVideoUrl}
                         // src={`https://www.youtube.com/embed/${selectedProduct?.demoVideoUrl}`}
                         src="https://youtu.be/QtNNAh_IgYs"
                         title="YouTube video player"
@@ -655,7 +664,7 @@ const Shop = () => {
                         allowFullScreen
                       ></iframe>
                       <Button onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
-                  </Box>
+                    </Box>
                   </Modal>
 
                   <CardContent sx={{ flex: 1 }}>
@@ -699,6 +708,7 @@ const Shop = () => {
           onClose={toggleCartDrawer(false)}
           onClick={toggleCheckoutDrawer(true)}
           openProduct={toggleDetailDrawer(true)}
+          openLogin={handleLoginModal(true)}
         />
       </Drawer>
 
@@ -741,18 +751,31 @@ const Shop = () => {
       >
         <Checkout onClose={toggleCheckoutDrawer(false)} />
       </Drawer>
+
+      {/* login modal  */}
+      <Modal
+        open={openLoginModal}
+        onClose={handleLoginModal(false)}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Login
+          onClose={handleLoginModal(false)}
+        />
+      </Modal>
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         message={snackbarMessage}
       >
-       <SnackbarContent
+        <SnackbarContent
           message={snackbarMessage}
           sx={{ backgroundColor: "#4caf50", color: "#fff" }}
         />
       </Snackbar>
-      
+
     </Box>
   );
 };
