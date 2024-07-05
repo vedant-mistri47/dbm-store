@@ -227,7 +227,7 @@ const Checkout = ({ onClose }) => {
             </Grid>
             <Box>
                 <Typography variant="h6" component="div">
-                    Total Price : {currencySymbol}{(subtotal * exchangeRates).toFixed(2)}
+                    Total price : {currencySymbol}{(subtotal * exchangeRates).toFixed(2)}
                 </Typography>
                 <Box display="flex" justifyContent="space-between" alignItems="center" >
                     <Typography variant="h6" mt={2}> Address :</Typography>
@@ -377,6 +377,10 @@ const Checkout = ({ onClose }) => {
                                 onChange={(e) => setZip(e.target.value)}
                                 error={!!errors.zip}
                                 helperText={errors.zip}
+                                inputProps={{
+                                    maxLength: 6,
+                                    pattern: "\\d{6}", 
+                                  }}
                             />
                         </Grid>
                     </Grid>

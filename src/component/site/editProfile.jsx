@@ -113,7 +113,7 @@ const EditProfile = ({ onClose }) => {
       errors.email = "Invalid email address";
     }
     if (!validator.isNumeric(profile.zip)) {
-      errors.zip = "Zip code must contain only numbers";
+      errors.zip = "Zip code must contain only 6 numbers";
     }
     if (!validator.isAlpha(profile.state.replace(/\s/g, ""))) {
       errors.state = "State must contain only letters";
@@ -179,10 +179,12 @@ const EditProfile = ({ onClose }) => {
       setSnackbarMessage("Please correct the highlighted errors");
       setSnackbarOpen(true);
     } else {
-      setLoading(true);
+      setLoading(true); // Set loading state to true when save is clicked
       const profilePictureUrl = await uploadProfilePicture();
       await updateProfile(profilePictureUrl);
-      setLoading(false);
+      setLoading(false); // Set loading state to false after save operation is complete
+      setSnackbarMessage("Profile updated successfully");
+      setSnackbarOpen(true);
     }
   };
 
@@ -195,184 +197,191 @@ const EditProfile = ({ onClose }) => {
 
   return (
     <Box
-    sx={{
-      ...style,
-      width: "90%",
-      maxWidth: { xs: 250, md: 600 },
-      height: { xs: "70vh", md: "auto" },
-      overflow: "auto",
-    }}
-  >
-    <Typography fontSize={"26px"} fontWeight={300} gutterBottom>
-      Edit Profile
-    </Typography>
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={3} sx={{ textAlign: "center" }}>
-        <Avatar
-          alt="Profile"
-          src={profilePicture}
-          sx={{
-            width: 100,
-            height: 100,
-            margin: "0 auto",
-            cursor: "pointer",
-          }}
-          onClick={() =>
-            document.getElementById("profile-picture-upload").click()
-          }
-        />
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          id="profile-picture-upload"
-          onChange={handleFileChange}
-        />
-      </Grid>
-      <Grid item xs={12} md={9} container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Name"
-            name="name"
-            value={profile.name}
-            variant="outlined"
-            required
-            error={!!errors.name}
-            helperText={errors.name}
-            onChange={handleInputChange}
-            size="small"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <PhoneInput
-            inputStyle={{
-              width: "100%",
-              height: "40px",
-              fontFamily: "Monospace",
-              border: "1px solid #AEB4BE",
+      sx={{
+        ...style,
+        width: "90%",
+        maxWidth: { xs: 250, md: 600 },
+        height: { xs: "70vh", md: "auto" },
+        overflow: "auto",
+      }}
+    >
+      <Typography fontSize={"26px"} fontWeight={300} gutterBottom>
+        Edit Profile
+      </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={3} sx={{ textAlign: "center" }}>
+          <Avatar
+            alt="Profile"
+            src={profilePicture}
+            sx={{
+              width: 100,
+              height: 100,
+              margin: "0 auto",
+              cursor: "pointer",
             }}
-            country={"in"}
-            value={profile.phone}
-            onChange={(phone) =>
-              setProfile((prevProfile) => ({
-                ...prevProfile,
-                phone,
-              }))
+            onClick={() =>
+              document.getElementById("profile-picture-upload").click()
             }
-            inputProps={{
-              name: "phone",
-              required: true,
-            }}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            id="profile-picture-upload"
+            onChange={handleFileChange}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Email Address"
-            name="email"
-            value={profile.email}
-            required
-            error={!!errors.email}
-            helperText={errors.email}
-            onChange={handleInputChange}
-            size="small"
-          />
+        <Grid item xs={12} md={9} container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Name"
+              name="name"
+              value={profile.name}
+              variant="outlined"
+              required
+              error={!!errors.name}
+              helperText={errors.name}
+              onChange={handleInputChange}
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <PhoneInput
+              inputStyle={{
+                width: "100%",
+                height: "40px",
+                fontFamily: "Monospace",
+                border: "1px solid #AEB4BE",
+              }}
+              country={"in"}
+              value={profile.phone}
+              onChange={(phone) =>
+                setProfile((prevProfile) => ({
+                  ...prevProfile,
+                  phone,
+                }))
+              }
+              inputProps={{
+                name: "phone",
+                required: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Email Address"
+              name="email"
+              value={profile.email}
+              required
+              error={!!errors.email}
+              helperText={errors.email}
+              onChange={handleInputChange}
+              size="small"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12} container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <TextField
-            fullWidth
-            label="Your Address"
-            name="address"
-            multiline
-            rows={5}
-            required
-            value={profile.address}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Your City"
-                name="city"
-                value={profile.city}
-                required
-                error={!!errors.city}
-                helperText={errors.city}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Your State"
-                size="small"
-                name="state"
-                value={profile.state}
-                required
-                error={!!errors.state}
-                helperText={errors.state}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Country"
-                size="small"
-                name="country"
-                value={profile.country}
-                required
-                error={!!errors.country}
-                helperText={errors.country}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Zip Code"
-                size="small"
-                name="zip"
-                value={profile.zip}
-                required
-                error={!!errors.zip}
-                helperText={errors.zip}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                onClick={handleSave}
-              >
-                Save
-              </Button>
+        <Grid item xs={12} container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Your Address"
+              name="address"
+              multiline
+              rows={5}
+              required
+              value={profile.address}
+              onChange={handleInputChange}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Your City"
+                  name="city"
+                  value={profile.city}
+                  required
+                  error={!!errors.city}
+                  helperText={errors.city}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Your State"
+                  size="small"
+                  name="state"
+                  value={profile.state}
+                  required
+                  error={!!errors.state}
+                  helperText={errors.state}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Country"
+                  size="small"
+                  name="country"
+                  value={profile.country}
+                  required
+                  error={!!errors.country}
+                  helperText={errors.country}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  label="Zip Code"
+                  size="small"
+                  name="zip"
+                  value={profile.zip}
+                  required
+                  error={!!errors.zip}
+                  helperText={errors.zip}
+                  onChange={handleInputChange}
+                  inputProps={{
+                    maxLength: 6,
+                    pattern: "\\d{6}",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  onClick={handleSave}
+                >
+            
+                {loading ? <CircularProgress size={24} color="inherit" /> : "save"} 
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
-    <Snackbar
-      open={snackbarOpen}
-      autoHideDuration={6000}
-      onClose={handleSnackbarClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-    >
-      <SnackbarContent
-        message={snackbarMessage}
-        sx={{ backgroundColor: "#0084fe", color: "#fff" }}
-      />
-    </Snackbar>
-  </Box>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <SnackbarContent
+          message={snackbarMessage}
+          
+          sx={{ backgroundColor: "#0084fe", color: "#fff" }}
+        />
+      </Snackbar>
+    </Box>
   );
 };
 

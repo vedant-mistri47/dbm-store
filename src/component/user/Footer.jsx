@@ -14,6 +14,9 @@ import {
   DialogContent,
   DialogActions,
   Divider,
+  Snackbar,
+  SnackbarContent,
+  CircularProgress,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import img from "../image/logo (1).png";
@@ -23,6 +26,7 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import axiosInstance from "../../util/axiosInstance";
+import {Image} from "../../../lib"
 function Footer() {
   const [showScroll, setShowScroll] = useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
@@ -35,10 +39,13 @@ function Footer() {
   const [newsletterName, setNewsletterName] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [storeData, setStoreData] = useState(null); 
   const [validationErrors, setValidationErrors] = useState({
     name: "",
     email: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -125,7 +132,7 @@ function Footer() {
   };
   const handleNewsletterSubmit = async (event) => {
     event.preventDefault();
-    // Validate inputs
+    setLoading(true);
     let errors = {
       name: "",
       email: "",
@@ -141,6 +148,7 @@ function Footer() {
     if (errors.name || errors.email) {
       setValidationErrors(errors);
       setNewsletterMessage("");
+      setLoading(false);
     } else {
       try {
         await axiosInstance.post("/app/subscribe", {
@@ -149,7 +157,7 @@ function Footer() {
           email: newsletterEmail,
         });
         setNewsletterMessage("Subscription successful!");
-        // Clear form fields after successful submission
+        setSnackbarOpen(true);
         setNewsletterName("");
         setNewsletterEmail("");
         setValidationErrors({
@@ -158,9 +166,27 @@ function Footer() {
         });
       } catch (error) {
         setNewsletterMessage("Subscription failed. Please try again.");
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
       }
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+        setStoreData(response.data.storeSettings); // Update state with the fetched data
+        setError(null);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+
 
   return (
     <>
@@ -185,16 +211,17 @@ function Footer() {
                 alignItems={{ xs: "center", md: "flex-start" }}
                 textAlign="center"
               >
-                <img
-                  src={img}
+              <img
+                  src={Image(storeData?.logo) }
                   alt="Logo"
                   style={{ height: "70px", marginBottom: "20px" }}
                 />
+                
                 <Box textAlign={{ xs: "center", sm: "left" }}>
-                  <Typography sx={{ color: "black" }}>
-                    <strong>Address:</strong> B204, Sumel Business Park – 7,
+                <Typography sx={{ color: "black" }}>
+                    <strong>Address:</strong> {storeData?.address}
                   </Typography>
-                  <Typography>Odhav, Ahmedabad – 382415</Typography>
+                 
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -205,13 +232,13 @@ function Footer() {
                       onClick={handleEmailClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Email:</strong> info@digibulkmarketing.com
+                      <strong>Email:</strong> {storeData?.email}
                     </Typography>
                     <Typography
                       onClick={handlePhoneClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Phone:</strong> 1800-889-8358
+                      <strong>Phone:</strong> {storeData?.phone}
                     </Typography>
                   </Box>
                 </Box>
@@ -398,20 +425,24 @@ function Footer() {
                     }}
                   >
                     <Button
-                      sx={{
-                        backgroundColor: "#0084FE",
-                        color: "white",
-                        marginTop: "12px",
-                      }}
-                      type="submit"
-                      variant="contained"
-                    >
-                      SUBSCRIBE
-                    </Button>
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    disabled={loading}
+                    sx={{
+                      backgroundColor: "#1976d2", // Original blue color
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#1565c0", // Original dark blue on hover
+                        color: "#fff",
+                      },
+                    }}
+                  >
+                    {loading ? <CircularProgress size={24} /> : "SUBSCRIBE"}
+                  </Button>
                   </Box>
-                  {newsletterMessage && (
-                    <Typography>{newsletterMessage}</Typography>
-                  )}
+                 
                 </Stack>
               </Box>
             </Grid>
@@ -545,6 +576,17 @@ function Footer() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <SnackbarContent
+          message={newsletterMessage}
+          sx={{ backgroundColor: "#4caf50", color: "#fff" }} // Success green color
+        />
+      </Snackbar>
     </>
   );
 }
