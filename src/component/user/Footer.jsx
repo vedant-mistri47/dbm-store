@@ -14,6 +14,9 @@ import {
   DialogContent,
   DialogActions,
   Divider,
+  Snackbar,
+  SnackbarContent,
+  CircularProgress,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import img from "../image/logo (1).png";
@@ -39,6 +42,8 @@ function Footer() {
     name: "",
     email: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -125,7 +130,7 @@ function Footer() {
   };
   const handleNewsletterSubmit = async (event) => {
     event.preventDefault();
-    // Validate inputs
+    setLoading(true);
     let errors = {
       name: "",
       email: "",
@@ -141,6 +146,7 @@ function Footer() {
     if (errors.name || errors.email) {
       setValidationErrors(errors);
       setNewsletterMessage("");
+      setLoading(false);
     } else {
       try {
         await axiosInstance.post("/app/subscribe", {
@@ -149,7 +155,7 @@ function Footer() {
           email: newsletterEmail,
         });
         setNewsletterMessage("Subscription successful!");
-        // Clear form fields after successful submission
+        setSnackbarOpen(true);
         setNewsletterName("");
         setNewsletterEmail("");
         setValidationErrors({
@@ -158,6 +164,9 @@ function Footer() {
         });
       } catch (error) {
         setNewsletterMessage("Subscription failed. Please try again.");
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -398,20 +407,24 @@ function Footer() {
                     }}
                   >
                     <Button
-                      sx={{
-                        backgroundColor: "#0084FE",
-                        color: "white",
-                        marginTop: "12px",
-                      }}
-                      type="submit"
-                      variant="contained"
-                    >
-                      SUBSCRIBE
-                    </Button>
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    disabled={loading}
+                    sx={{
+                      backgroundColor: "#1976d2", // Original blue color
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#1565c0", // Original dark blue on hover
+                        color: "#fff",
+                      },
+                    }}
+                  >
+                    {loading ? <CircularProgress size={24} /> : "SUBSCRIBE"}
+                  </Button>
                   </Box>
-                  {newsletterMessage && (
-                    <Typography>{newsletterMessage}</Typography>
-                  )}
+                 
                 </Stack>
               </Box>
             </Grid>
@@ -545,6 +558,17 @@ function Footer() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <SnackbarContent
+          message={newsletterMessage}
+          sx={{ backgroundColor: "#4caf50", color: "#fff" }} // Success green color
+        />
+      </Snackbar>
     </>
   );
 }
