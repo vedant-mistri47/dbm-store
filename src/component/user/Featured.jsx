@@ -11,6 +11,7 @@ import {
   Card,
   Container,
   Grid,
+  Rating,
   Typography,
 } from "@mui/material";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
@@ -378,6 +379,15 @@ const Featured = () => {
                             ) * exchangeRates
                           ).toFixed(2)}
                         </Typography>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          gap="10px"
+                          mt="5px"
+                        >
+                          <Rating readOnly value={5} />
+                          <Typography>99+ Reviews</Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
