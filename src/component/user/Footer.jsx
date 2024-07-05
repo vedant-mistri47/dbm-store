@@ -177,7 +177,7 @@ function Footer() {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
-        setStoreData(response.data.storeSettings); // Update state with the fetched data
+        setStoreData(response.data.storeSettings);
         setError(null);
       } catch (error) {
         setError(error.message);
