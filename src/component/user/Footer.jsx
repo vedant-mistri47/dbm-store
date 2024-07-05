@@ -26,6 +26,7 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import axiosInstance from "../../util/axiosInstance";
+import {Image} from "../../../lib"
 function Footer() {
   const [showScroll, setShowScroll] = useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
@@ -38,6 +39,7 @@ function Footer() {
   const [newsletterName, setNewsletterName] = useState("");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMessage, setNewsletterMessage] = useState("");
+  const [storeData, setStoreData] = useState(null); 
   const [validationErrors, setValidationErrors] = useState({
     name: "",
     email: "",
@@ -171,6 +173,21 @@ function Footer() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+        setStoreData(response.data.storeSettings); // Update state with the fetched data
+        setError(null);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+
   return (
     <>
       <Box sx={{ backgroundColor: "#fff" }}>
@@ -194,16 +211,17 @@ function Footer() {
                 alignItems={{ xs: "center", md: "flex-start" }}
                 textAlign="center"
               >
-                <img
-                  src={img}
+              <img
+                  src={Image(storeData?.logo) }
                   alt="Logo"
                   style={{ height: "70px", marginBottom: "20px" }}
                 />
+                
                 <Box textAlign={{ xs: "center", sm: "left" }}>
-                  <Typography sx={{ color: "black" }}>
-                    <strong>Address:</strong> B204, Sumel Business Park – 7,
+                <Typography sx={{ color: "black" }}>
+                    <strong>Address:</strong> {storeData?.address}
                   </Typography>
-                  <Typography>Odhav, Ahmedabad – 382415</Typography>
+                 
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -214,13 +232,13 @@ function Footer() {
                       onClick={handleEmailClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Email:</strong> info@digibulkmarketing.com
+                      <strong>Email:</strong> {storeData?.email}
                     </Typography>
                     <Typography
                       onClick={handlePhoneClick}
                       sx={{ cursor: "pointer", color: "black" }}
                     >
-                      <strong>Phone:</strong> 1800-889-8358
+                      <strong>Phone:</strong> {storeData?.phone}
                     </Typography>
                   </Box>
                 </Box>

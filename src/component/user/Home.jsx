@@ -468,7 +468,7 @@ return (
                   src={image1}
                   alt="Marketing Team"
                   sx={{
-                    width: { xs: "250px", md: "450px" },
+                    width: { xs: "290px", md: "450px" },
                     borderRadius: 2,
                     transform: "rotate(0deg)",
                     display: "block",
@@ -567,7 +567,7 @@ return (
     <Box
       component="span"
       sx={{
-        color: theme.palette.primary.main, // Use the primary color from the theme
+        color: theme.palette.primary.main, 
         mx: 1,
       }}
     >
@@ -697,7 +697,7 @@ return (
               alignItems="baseline"
               sx={{
                 flexWrap: "nowrap",
-                gap: "43px",
+                gap: "20px",
                 "@media (max-width: 900px)": {
                   flexWrap: "wrap",
                   justifyContent: "center",
