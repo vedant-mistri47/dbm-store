@@ -1,4 +1,5 @@
-import { Box, Button, Grid, MenuItem, Modal, Typography } from '@mui/material';
+
+import { Box, Button, CircularProgress, Grid, MenuItem, Modal, Typography } from '@mui/material';
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
 import React, { useState } from "react";
 import {
@@ -47,7 +48,7 @@ const Checkout = ({ onClose }) => {
         country: '',
         zip: ''
     });
-
+    const [loading, setLoading] = useState(false);
     const validateForm = () => {
         let valid = true;
         const newErrors = {
@@ -105,6 +106,7 @@ const Checkout = ({ onClose }) => {
     const handleSubmit = () => {
         const isValid = validateForm();
         if (isValid) {
+            setLoading(true);
             const userData = {
                 name,
                 email,
@@ -116,7 +118,7 @@ const Checkout = ({ onClose }) => {
                 zip,
             };
             dispatch(setUserDetail(userData));
-            PlaceOrder(userData)
+            PlaceOrder(userData);
         }
     };
 
@@ -133,33 +135,21 @@ const Checkout = ({ onClose }) => {
             document.body.appendChild(script);
         });
     };
+
     const PlaceOrder = async (userData) => {
         try {
             const paymentdata = {
-                // userData,
                 currency: currency,
                 payment_method: selectedPaymentMethod,
                 items: products
             };
-
-            // const paymentdata = {
-            //     "currency":"USD",
-            //     "payment_method":"paypal",
-            //     "items":[{
-            //     "product_id": "6644a5b13a3674779359ac39",
-            //     "variation_id": "65926b53dbba6d34a8996e35",
-            //     "quantity":2
-            //   }]
-            // }
             
-            console.log(paymentdata);
-            const response = await axiosInstance.post("orders/place-order",JSON.stringify(paymentdata));
-            console.log(response)
+            const response = await axiosInstance.post("orders/place-order", JSON.stringify(paymentdata));
             if (response.data.status) {
                 if (selectedPaymentMethod === "razorpay") {
-                    displayRazorpay(userData ,response.data.result, response.data.razorpay_key);
+                    displayRazorpay(userData, response.data.result, response.data.razorpay_key);
                 } else if (selectedPaymentMethod === 'stripe') {
-                    makeStripePayment(response?.data?.result.url, "pk_test_51L1E9YSFDFHp5bEhFLrxuBRiZ0ifZQE5Nle0k1szQOzv3H3fOG0UXU2QsxbBzvGJYBDqsFN73f0P58hWVpFJYddC00qtpMYQRs");
+                    makeStripePayment(response?.data?.result.url);
                 } else if (selectedPaymentMethod === 'paypal') {
                     makePaypalPayment(response?.data?.approval_url);
                 } else {
@@ -170,23 +160,29 @@ const Checkout = ({ onClose }) => {
             }
         } catch (err) {
             console.log(err);
+        } finally {
+            setLoading(false);
         }
     };
+
     const razorpayVerification = async (razorpay_payment_id, razorpay_order_id, razorpay_signature) => {
         const data = await axiosInstance.post("/orders/verify-payment", { razorpay_payment_id, razorpay_order_id, razorpay_signature });
         console.log(data);
     };
+
     const makePaypalPayment = (link) => {
         if (link) {
             window.location.href = link;
         }
     };
+
     const makeStripePayment = (link) => {
         if (link) {
             window.location.href = link;
         }
     };
-    async function displayRazorpay(userData , order, razoypayKey) {
+
+    async function displayRazorpay(userData, order, razoypayKey) {
         const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
         if (!res) {
             console.log("Razorpay SDK failed to load. Are you online?");
@@ -224,7 +220,6 @@ const Checkout = ({ onClose }) => {
         });
         razorpay.open();
     }
-
 
 
     return (
@@ -455,13 +450,17 @@ const Checkout = ({ onClose }) => {
                 <Button
                     variant="contained"
                     color="black"
+                    disabled={loading} 
                     sx={{ color: '#fff', borderRadius: 2,my:2 }}
                     fullWidth
-                    onClick={handleSubmit}>
-                    Place Order
+                    onClick={handleSubmit}
+                    >
+                    {loading ? <CircularProgress size={24} color='inherit'/> : 'Place Order'}
                 </Button>
             </Box>
         </Box>
     );
 }
 export default Checkout;
+
+
