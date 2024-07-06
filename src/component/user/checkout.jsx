@@ -98,7 +98,10 @@ const Checkout = ({ onClose }) => {
         if (!zip.trim()) {
             newErrors.zip = 'Zip code is required';
             valid = false;
-        }
+          } else if (!/^\d{6}$/.test(zip.trim())) {
+            newErrors.zip = 'Zip code must be exactly 6 digits';
+            valid = false;
+          }
         setErrors(newErrors);
         return valid;
     };

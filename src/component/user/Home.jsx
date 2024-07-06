@@ -101,8 +101,8 @@ const Home = () => {
     return regex.test(email);
   };
   const isValidName = (name) => {
-    // Regex to match only alphabetic characters
-    const regex = /^[A-Za-z]+$/;
+    
+    const regex = /^[A-Za-z\s]+$/;
     return regex.test(name);
   }
   useEffect(() => {
@@ -841,7 +841,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -865,7 +865,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="120px"
                 minHeight="100px"
               >
                 <Box
@@ -1076,7 +1076,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -1126,7 +1126,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="120px"
                 minHeight="100px"
               >
                 <Box
@@ -1336,7 +1336,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -1386,7 +1386,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="120px"
                 minHeight="100px"
               >
                 <Box

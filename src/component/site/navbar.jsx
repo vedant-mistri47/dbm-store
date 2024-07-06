@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -72,6 +72,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [storeData, setStoreData] = useState(null); 
 
   const toggleOrderDetailsDrawer = (newOpen) => () => {
     setDetails(newOpen);
@@ -113,6 +114,21 @@ const Navbar = () => {
     showSnackbar("Logged out successfully.");
   };
 
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+      setStoreData(response.data.storeSettings); 
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
   const DrawerList = (
     <Box
       sx={{ width: 250 }}
@@ -127,7 +143,11 @@ const Navbar = () => {
           paddingLeft: "25px",
         }}
       >
-        <img src={logo} alt="Logo" width="70%" />
+       <img
+                  src={Image(storeData?.logo) }
+                  alt="Logo"
+                  style={{ height: "70px", marginBottom: "20px" }}
+                />
       </Box>
       <List>
         {pages.map((text, index) => (
