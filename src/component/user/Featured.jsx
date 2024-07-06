@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import Carousel from 'react-multi-carousel';
-import { makeStyles } from '@mui/styles';
-import 'react-multi-carousel/lib/styles.css';
-import {Image} from "../../../lib"
-import { Badge, Box, Button, Card, Container, Grid, Typography } from '@mui/material';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { styled } from '@mui/system';
-import axiosInstance from "../../util/axiosInstance"; 
+import React, { useEffect, useState } from "react";
+import hiringImage from "../image/Image.png";
+import Carousel from "react-multi-carousel";
+import { makeStyles } from "@mui/styles";
+import "react-multi-carousel/lib/styles.css";
+import zomatoImg from "../image/google-map-extractor-7 1.png";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Rating,
+  Typography,
+} from "@mui/material";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { styled } from "@mui/system";
+import axiosInstance from "../../util/axiosInstance";
+import { CURRENCIES_SYMBOL } from "../currency/currency";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   carousel: {
@@ -166,6 +178,116 @@ const Featured = () => {
           </Box>
           sellers
         </Typography>
+        <Grid
+          container
+          sx={{
+            justifyContent: {
+              md: "space-between",
+              sm: "center",
+              xs: "center",
+            },
+            alignItems: "center",
+          }}
+          display="flex"
+        >
+          {products.map((product, index) => (
+            <Grid
+              item
+              key={index}
+              xs={12}
+              sm={6}
+              md={4}
+              display="flex"
+              justifyContent="center"
+            >
+              <StyledBadge
+                badgeContent={`${20}% Off`}
+                transform={transformations[index % transformations.length]}
+              >
+                <Card
+                  sx={{
+                    borderRadius: "15px",
+                    p: 2,
+                    position: "relative",
+                    maxWidth: 300,
+                    m: 2,
+                  }}
+                >
+                  <Grid
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#FBF5EC",
+                        textAlign: "center",
+                      }}
+                    >
+                      <img
+                        width={200}
+                        height={200}
+                        src={product.image}
+                        alt={product.title}
+                      />
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      xs={12}
+                      justifyContent="space-between"
+                      my={3}
+                    >
+                      <Grid item xs={12}>
+                        <Typography
+                          variant="h5"
+                          fontWeight={600}
+                          sx={{ textAlign: "center", fontSize: "16px" }}
+                        >
+                          {product.name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ textAlign: "center", mt: 1, fontSize: "16px" }}
+                        >
+                          {currencySymbol}
+                          {(
+                            product.rates.reduce(
+                              (min, rate) => Math.min(min, rate.price),
+                              Infinity
+                            ) * exchangeRates
+                          ).toFixed(2)}{" "}
+                          - {currencySymbol}
+                          {(
+                            product.rates.reduce(
+                              (max, rate) => Math.max(max, rate.price),
+                              -Infinity
+                            ) * exchangeRates
+                          ).toFixed(2)}
+                        </Typography>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          gap="10px"
+                          mt="5px"
+                        >
+                          <Rating readOnly value={5} />
+                          <Typography>99+ Reviews</Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Card>
+              </StyledBadge>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </Box>
   );
