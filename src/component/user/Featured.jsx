@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import hiringImage from "../image/Image.png";
+import hiringImage from "/image/Image.png";
 import Carousel from "react-multi-carousel";
 import { makeStyles } from "@mui/styles";
 import "react-multi-carousel/lib/styles.css";
-import zomatoImg from "../image/google-map-extractor-7 1.png";
+// import zomatoImg from "../image/google-map-extractor-7 1.png";
 import {
   Badge,
   Box,
@@ -117,6 +117,11 @@ const Featured = () => {
 
   }, []);
 
+  const getData=async()=>{
+    const response = await axiosInstance.get("/app/discount/product");
+    console.log("response",response)
+  }
+
   const multiCarouselResponsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -146,6 +151,7 @@ const Featured = () => {
         justifyContent="center"
         alignItems="center"
       >
+        <Button onClick={()=>{getData()}}>click cherck</Button>
         <ArrowBackRoundedIcon onClick={previous} sx={arrowStyle} />
         <ArrowForwardRoundedIcon onClick={next} sx={arrowStyle} />
       </Box>

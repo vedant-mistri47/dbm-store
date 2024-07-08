@@ -30,7 +30,7 @@ import Checkout from "../user/checkout";
 import Cart from "../user/cart";
 import Login from "./login";
 import Order from "../user/order";
-import logo from "../image/logo (1).png";
+import logo from "/image/logo (1).png";
 import OrderDetails from "../user/orderDetails";
 import EditProfile from "./editProfile";
 import Wishlist from "../user/wishlist";

@@ -427,14 +427,14 @@ import React, { useState } from "react";
 import { TextField, Divider } from "@mui/material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import Paypal from "../image/paypal.png";
-import razorpay from "../image/razorpay.png";
-import Stripe from "../image/stripe.png";
-import { setUserDetail } from "../../redux/payment/paymentSlice";
-import { useDispatch, useSelector } from "react-redux";
-import axiosInstance from "../../util/axiosInstance";
-import { CURRENCIES_SYMBOL } from "../currency/currency";
-import countrys from "../../countryList.json";
+import Paypal from '/image/paypal.png';
+import razorpay from '/image/razorpay.png';
+import Stripe from '/image/stripe.png';
+import { setUserDetail } from '../../redux/payment/paymentSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import axiosInstance from '../../util/axiosInstance';
+import { CURRENCIES_SYMBOL } from '../currency/currency';
+import countrys from '../../countryList.json'
 
 const Checkout = ({ onClose }) => {
   const userDetails = useSelector((state) => state.payment.userDetails);

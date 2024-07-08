@@ -19,7 +19,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import KeyboardArrowLeftRoundedIcon from "@mui/icons-material/KeyboardArrowLeftRounded";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
-import contactFormImg from "../image/ContactForm.png";
+import contactFormImg from "/image/ContactForm.png";
 import { makeStyles } from "@mui/styles";
 import axiosInstance from "../../util/axiosInstance";
 
