@@ -7,14 +7,16 @@
 //   Button,
 //   Grid,
 //   Box,
+//   Modal,
+//   IconButton,
+//   useMediaQuery,
+//   useTheme,
 // } from "@mui/material";
 // import axiosInstance from "../../util/axiosInstance";
-// import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-// import teslaLogo from "../image/480px-Tesla_logo 1.png";
-// import coronaLogo from "../image/corona-logo-2 1.png";
+// import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+
 // import imgv from "../image/Scan.png";
 // import { Image } from "../../../lib";
-
 
 // const chunkArray = (array, chunkSize) => {
 //   const result = [];
@@ -26,6 +28,7 @@
 
 // const About = () => {
 //   const [aboutUs, setAboutUs] = useState([]);
+//   const [open, setOpen] = useState(false);
 
 //   useEffect(() => {
 //     const fetchData = async () => {
@@ -41,16 +44,173 @@
 //     fetchData();
 //   }, []);
 
+//   const handleOpen = () => setOpen(true);
+//   const handleClose = () => setOpen(false);
+
+//   const theme = useTheme();
+//   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
 //   const renderContent = (section, index) => {
 //     if (index % 2 === 0) {
 //       return (
 //         <Container>
 //           <Grid
 //             container
-//             sx={{ flexDirection: { xs: "column-reverse", md: "row" } }}
+//             spacing={3}
+//             direction={isMobile ? "column-reverse" : "row"}
 //           >
-//             <Grid item xs={12} md={7} mt={5}>
+//             <Grid item xs={12} md={index % 2 === 0 ? 7 : 5}>
 //               <CardContent sx={{ textAlign: "left" }}>
+//                 <Typography
+//                   variant={isMobile ? "h6" : "h5"}
+//                   gutterBottom
+//                   fontWeight={600}
+//                 >
+//                   {section.title}
+//                 </Typography>
+//                 <Typography
+//                   variant="body"
+//                   gutterBottom
+//                   color="#1783FE"
+//                   display={'flex'}
+//                   sx={{ margin: "10px 0" }}
+//                 >
+//                   {section.subtitle}
+//                 </Typography>
+//                 <Typography
+//                   variant="body"
+//                   gutterBottom
+//                   display={'flex'}
+//                   align="justify"
+//                   sx={{ margin: "20px 0px" }}
+//                 >
+//                   {section.description}
+//                 </Typography>
+//                 {(index === 1 || index === 2) && (
+//                   <Box
+//                   width={150}
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "space-around",
+//                     cursor: "pointer",
+//                   }}
+//                   onClick={handleOpen}
+//                 >
+//                   <Typography
+//                     bgcolor={"#1783FE"}
+                   
+//                     height={"50px"}
+//                     width={"50px"}
+//                     display={"flex"}
+//                     alignItems={"center"}
+//                     justifyContent={"center"}
+//                     borderRadius={"50%"}
+//                   >
+//                     <PlayArrowOutlinedIcon fontSize="large" color="white" />
+//                   </Typography>
+//                   <Typography>Our Story</Typography>
+//                 </Box>
+//                 )}
+//                 {index === 0 && (
+//                   <Button
+//                     variant="contained"
+//                     color="primary"
+//                     href="https://anydesk.com/en/downloads/windows"
+//                     target="_blank"
+//                     sx={{ marginTop: 2, width: isMobile ? "100%" : "auto" }}
+//                   >
+//                     Download Anydesk
+//                   </Button>
+//                 )}
+//               </CardContent>
+//             </Grid>
+//             <Grid item xs={12} md={index % 2 === 0 ? 5 : 7}>
+//               <Box
+//                 sx={{
+//                   display: "flex",
+//                   justifyContent: "center",
+//                   alignItems: "center",
+//                   width: "100%",
+//                 }}
+//               >
+//                 <img
+//                   src={Image(section.image)}
+//                   alt="Section Image"
+//                   style={{
+//                     maxWidth: "100%",
+//                     height: "auto",
+//                     maxHeight: isMobile ? "300px" : "400px",
+//                   }}
+//                 />
+//               </Box>
+//               {section.logo && (
+//                 <Grid container spacing={2} sx={{ marginTop: 2 }}>
+//                   {chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
+//                     <Grid container item spacing={2} key={rowIdx}>
+//                       {logoRow.map((item, idx) => (
+//                         <Grid item xs={4} key={idx}>
+//                           <img
+//                             src={Image(item)}
+//                             alt="Logo"
+//                             style={{ maxWidth: "100%", height: "auto" }}
+//                           />
+//                         </Grid>
+//                       ))}
+//                     </Grid>
+//                   ))}
+//                 </Grid>
+//               )}
+//             </Grid>
+//           </Grid>
+//         </Container>
+//       );
+//     } else {
+//       return (
+//         <>
+//           <Grid container spacing={3}>
+//             <Grid item xs={12} md={index % 2 === 0 ? 5 : 5} mt={5}>
+//               {section.image && (
+//                 <Box
+//                   sx={{
+//                     display: "flex",
+//                     justifyContent: "center",
+//                     alignItems: "center",
+//                     width: { xs: "100%", sm: "100%", md: "100%" },
+//                   }}
+//                 >
+//                   <img
+//                     src={Image(section.image)}
+//                     alt="Section Image"
+//                     style={{
+//                       maxWidth: "350px",
+//                       maxHeight: "800px",
+//                       display: "flex",
+//                       justifyContent: "center",
+//                       alignItems: "center",
+//                     }}
+//                   />
+//                 </Box>
+//               )}
+//               <Grid container direction="column" spacing={1} mt={0}>
+//                 {section.logo &&
+//                   chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
+//                     <Grid container item spacing={2} key={rowIdx}>
+//                       {logoRow.map((item, idx) => (
+//                         <Grid item xs={4} key={idx}>
+//                           <img
+//                             src={Image(item)}
+//                             alt="Logo"
+//                             style={{ maxWidth: "100%" }}
+//                           />
+//                         </Grid>
+//                       ))}
+//                     </Grid>
+//                   ))}
+//               </Grid>
+//             </Grid>
+//             <Grid item xs={12} md={7} mt={3}>
+//               <CardContent sx={{ textAlign: "start" }}>
 //                 <Typography variant="subtitle" gutterBottom fontWeight={600}>
 //                   {section.title}
 //                 </Typography>
@@ -69,135 +229,37 @@
 //                   gutterBottom
 //                   display="flex"
 //                   align="justify"
-//                   margin="20px 0px"
 //                 >
 //                   {section.description}
 //                 </Typography>
-
-//                 {index === 2 &&(
-//                   <Box width={150} margin={'30px 0 0 0'} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', cursor: "pointer" }}>
-//                   <Typography bgcolor={'#1783FE'} height={'50px'} width={'50px'} display={'flex'} alignItems={'center'} justifyContent={'center'} borderRadius={'50%'} >
-//                     <PlayArrowOutlinedIcon fontSize='large' color='white' />
-//                   </Typography>
-//                   <Typography>
-//                     Our Story
-//                   </Typography>
-//                 </Box>
-//                 )}
-
-//                 <Box
-//                   sx={{
-//                     display: "flex",
-//                     justifyContent: "flex-end",
-//                     marginTop: "30px",
-//                   }}
-//                 >
-//                   {index === 0 && (
-//                     <Button
-//                       variant="contained"
-//                       color="primary"
-//                       href="https://anydesk.com/en/downloads/windows"
-//                       target="_blank"
+//                 {index === 1 && (
+//                   <Box
+//                     width={150}
+//                     sx={{
+//                       display: "flex",
+//                       alignItems: "center",
+//                       justifyContent: "space-around",
+//                       cursor: "pointer",
+//                     }}
+//                     onClick={handleOpen}
+//                   >
+//                     <Typography
+//                       bgcolor={"#1783FE"}
+                     
+//                       height={"50px"}
+//                       width={"50px"}
+//                       display={"flex"}
+//                       alignItems={"center"}
+//                       justifyContent={"center"}
+//                       borderRadius={"50%"}
 //                     >
-//                       Download Anydesk
-//                     </Button>
-//                   )}
-//                 </Box>
+//                       <PlayArrowOutlinedIcon fontSize="large" color="white" />
+//                     </Typography>
+//                     <Typography>Our Story</Typography>
+//                   </Box>
+//                 )}
 //               </CardContent>
 //             </Grid>
-//             <Grid item xs={12} md={4} mt={7}>
-//               <Box
-//                 sx={{
-//                   display: "flex",
-//                   justifyContent: "center",
-//                   alignItems: "center",
-                
-//                   width: { xs: "80%", sm: "100%", md: "90%" },
-//                 }}
-//               >
-//                 <img
-//                   src={Image(section.image)}
-//                   alt="Section Image"
-//                   style={{ maxWidth: "100%" }}
-//                 />
-//               </Box>
-//             </Grid>
-//           </Grid>
-//         </Container>
-//       );
-//     } else {
-//       return (
-//         <>
-//           <Grid item xs={12} md={5} mt={5}>
-//             {section.image && (
-//               <Box
-//                 sx={{
-//                   display: "flex",
-//                   justifyContent: "center",
-//                   alignItems: "center",
-//                   margin: "auto",
-//                   width: { xs: "80%", sm: "80%", md: "80%" },
-//                 }}
-//               >
-//                 <img
-//                   src={Image(section.image)}
-//                   alt="Section Image"
-//                   style={{ maxWidth: "100%" }}
-//                 />
-//               </Box>
-//             )}
-//             <Grid container direction="column" spacing={2} mt={2}>
-//               {section.logo &&
-//                 chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
-//                   <Grid container item spacing={2} key={rowIdx}>
-//                     {logoRow.map((item, idx) => (
-//                       <Grid item xs={4} key={idx}>
-//                         <img
-//                           src={Image(item)}
-//                           alt="Logo"
-//                           style={{ maxWidth: "100%" }}
-//                         />
-//                       </Grid>
-//                     ))}
-//                   </Grid>
-//                 ))}
-//             </Grid>
-//           </Grid>
-//           <Grid item xs={12} md={7} mt={3}>
-//             <CardContent sx={{ textAlign: "left" }}>
-//               <Typography variant="subtitle" gutterBottom fontWeight={600}>
-//                 {section.title}
-//               </Typography>
-//               <Typography
-//                 variant="body"
-//                 gutterBottom
-//                 display="flex"
-//                 flexDirection="column"
-//                 color="#1783FE"
-//                 margin="10px 0"
-//               >
-//                 {section.subtitle}
-//               </Typography>
-//               <Typography
-//                 variant="body"
-//                 gutterBottom
-//                 display="flex"
-//                 align="justify"
-//                 margin="20px 0px"
-//               >
-//                 {section.description}
-//               </Typography>
-//               {index === 1 && (
-//                 <Box width={150} margin={'30px 0 0 0'} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around',cursor: "pointer" }}>
-//                 <Typography bgcolor={'#1783FE'} height={'50px'} width={'50px'} display={'flex'} alignItems={'center'} justifyContent={'center'} borderRadius={'50%'} >
-//                   <PlayArrowOutlinedIcon fontSize='large' color='white' />
-//                 </Typography>
-//                 <Typography>
-//                   Our Story
-//                 </Typography>
-//               </Box>
-//               )}
-//             </CardContent>
 //           </Grid>
 //         </>
 //       );
@@ -205,25 +267,21 @@
 //   };
 
 //   return (
-//     <Container sx={{ bgcolor: "#F4F4F4", padding: 0 }}>
+//     <Container sx={{ bgcolor: "#F4F4F4", padding: isMobile ? 2 : 4 }}>
 //       {aboutUs.map((section, index) => (
-//         <Grid container spacing={4} alignItems="flex-start" key={section._id}>
+//         <Box key={section._id} sx={{ marginBottom: 4 }}>
 //           {renderContent(section, index)}
-//         </Grid>
+//         </Box>
 //       ))}
-
 //       <Card
 //         sx={{
-//           display: "flex",
-//           justifyContent: "center",
-//           alignItems: "center",
 //           padding: 2,
 //           mt: 4,
 //           color: "white",
 //           borderRadius: "20px",
 //         }}
 //       >
-//         <Grid container spacing={4} justifyContent="center">
+//         <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">
 //           {[
 //             { title: "Free Update", description: "No Any Pay For Update" },
 //             {
@@ -242,17 +300,26 @@
 //                 <img
 //                   src={imgv}
 //                   alt={item.title}
-//                   style={{ maxWidth: "100%", height: "auto" }}
+//                   style={{
+//                     maxWidth: "100%",
+//                     height: "auto",
+//                     maxHeight: "100px",
+//                   }}
 //                 />
-//                 <Typography variant="h6" fontWeight={900} marginTop={2}>
+//                 <Typography
+//                   variant={isMobile ? "subtitle1" : "h6"}
+//                   fontWeight={900}
+//                   marginTop={2}
+//                 >
 //                   {item.title}
 //                 </Typography>
-//                 <Typography variant="body">{item.description}</Typography>
+//                 <Typography variant="body2">{item.description}</Typography>
 //               </Box>
 //             </Grid>
 //           ))}
 //         </Grid>
 //       </Card>
+//       {/* Modal remains the same */}
 //     </Container>
 //   );
 // };
@@ -270,28 +337,17 @@ import {
   Button,
   Grid,
   Box,
+  Modal,
+  IconButton,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import axiosInstance from "../../util/axiosInstance";
-import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
-import teslaLogo from "../image/480px-Tesla_logo 1.png";
-import coronaLogo from "../image/corona-logo-2 1.png";
+import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+
 import imgv from "../image/Scan.png";
 import { Image } from "../../../lib";
-
-const logos = [
-  { src: teslaLogo, alt: "Tesla Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: teslaLogo, alt: "Tesla Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: teslaLogo, alt: "Tesla Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: teslaLogo, alt: "Tesla Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-  { src: coronaLogo, alt: "Corona Logo" },
-];
 
 const chunkArray = (array, chunkSize) => {
   const result = [];
@@ -303,6 +359,7 @@ const chunkArray = (array, chunkSize) => {
 
 const About = () => {
   const [aboutUs, setAboutUs] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -318,17 +375,176 @@ const About = () => {
     fetchData();
   }, []);
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const renderContent = (section, index) => {
     if (index % 2 === 0) {
       return (
         <Container>
           <Grid
             container
-            sx={{ flexDirection: { xs: "column-reverse", md: "row" } }}
+            spacing={3}
+            direction={isMobile ? "column-reverse" : "row"}
           >
-            <Grid item xs={12} md={7} mt={5}>
+            <Grid item xs={12} md={index % 2 === 0 ? 7 : 5}>
               <CardContent sx={{ textAlign: "left" }}>
-                <Typography variant="subtitle" gutterBottom >
+                <Typography
+                  variant={isMobile ? "h6" : "subtitle"}
+                  gutterBottom
+                  fontWeight={600}
+                >
+                  {section.title}
+                </Typography>
+                <Typography
+                  variant="body"
+                  gutterBottom
+                  color="#1783FE"
+                  display="flex"
+                  sx={{ margin: "10px 0" }}
+                >
+                  {section.subtitle}
+                </Typography>
+                <Typography
+                  variant="body"
+                  gutterBottom
+                  display="flex"
+                  align="justify"
+                  sx={{ margin: "20px 0px" }}
+                >
+                  {section.description}
+                </Typography>
+                {(index === 1 || index === 2) && (
+                  <Box
+                    width={150}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleOpen}
+                  >
+                    <Box
+                      bgcolor="#1783FE"
+                      height={"50px"}
+                      width={"50px"}
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      borderRadius={"50%"}
+                    >
+                      <PlayArrowOutlinedIcon fontSize="large" color="white" />
+                    </Box>
+                    <Typography variant="body" sx={{ ml: 1 }}>Our Story</Typography>
+                  </Box>
+                )}
+                {index === 0 && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                  
+                    href="https://anydesk.com/en/downloads/windows"
+                    target="_blank"
+                    sx={{ marginTop: 2, width: isMobile ? "100%" : "auto" }}
+                  >
+                    Download Anydesk
+                  </Button>
+                )}
+              </CardContent>
+            </Grid>
+            <Grid item xs={12} md={index % 2 === 0 ? 5 : 7}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src={Image(section.image)}
+                  alt="Section Image"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    maxHeight: isMobile ? "300px" : "400px",
+                    borderRadius: "10px", // Rounded corners
+                  }}
+                />
+              </Box>
+              {section.logo && (
+                <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                  {chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
+                    <Grid container item spacing={2} key={rowIdx}>
+                      {logoRow.map((item, idx) => (
+                        <Grid item xs={4} key={idx}>
+                          <img
+                            src={Image(item)}
+                            alt="Logo"
+                            style={{ maxWidth: "100%", height: "auto" }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </Container>
+      );
+    } else {
+      return (
+        <>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={index % 2 === 0 ? 5 : 5} mt={5}>
+              {section.image && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: { xs: "100%", sm: "100%", md: "100%" },
+                  }}
+                >
+                  <img
+                    src={Image(section.image)}
+                    alt="Section Image"
+                    style={{
+                      maxWidth: "350px",
+                      maxHeight: "800px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: "10px",
+                    }}
+                  />
+                </Box>
+              )}
+              <Grid container direction="column" spacing={1} mt={0}>
+                {section.logo &&
+                  chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
+                    <Grid container item spacing={2} key={rowIdx}>
+                      {logoRow.map((item, idx) => (
+                        <Grid item xs={4} key={idx}>
+                          <img
+                            src={Image(item)}
+                            alt="Logo"
+                            style={{ maxWidth: "100%" }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ))}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={7} mt={3}>
+              <CardContent sx={{ textAlign: "start" }}>
+                <Typography variant="subtitle" gutterBottom fontWeight={600}>
                   {section.title}
                 </Typography>
                 <Typography
@@ -346,168 +562,36 @@ const About = () => {
                   gutterBottom
                   display="flex"
                   align="justify"
-                  margin="20px 0px"
                 >
                   {section.description}
                 </Typography>
-
-                {index === 2 && (
+                {index === 1 && (
                   <Box
                     width={150}
-                    margin={'30px 0 0 0'}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-around',
-                      cursor: "pointer"
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      cursor: "pointer",
                     }}
+                    onClick={handleOpen}
                   >
-                    <Typography
-                      bgcolor={'#1783FE'}
-                      height={'50px'}
-                      width={'50px'}
-                      display={'flex'}
-                      alignItems={'center'}
-                      justifyContent={'center'}
-                      borderRadius={'50%'}
+                    <Box
+                      bgcolor="#1783FE"
+                      height={"50px"}
+                      width={"50px"}
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"center"}
+                      borderRadius={"50%"}
                     >
-                      <PlayArrowOutlinedIcon fontSize='large' color='white' />
-                    </Typography>
-                    <Typography>
-                      Our Story
-                    </Typography>
+                      <PlayArrowOutlinedIcon fontSize="large" color="white" />
+                    </Box>
+                    <Typography variant="body" sx={{ ml: 1 }}>Our Story</Typography>
                   </Box>
                 )}
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "30px",
-                  }}
-                >
-                  {index === 0 && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href="https://anydesk.com/en/downloads/windows"
-                      target="_blank"
-                    >
-                      Download Anydesk
-                    </Button>
-                  )}
-                </Box>
               </CardContent>
             </Grid>
-            <Grid item xs={12} md={5} mt={7}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: { xs: "100%", sm: "100%", md: "100%" },
-                }}
-              >
-                <img
-                  src={Image(section.image)}
-                  alt="Section Image"
-                  style={{ maxWidth: "100%", maxHeight: "400px" }}
-                />
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      );
-    } else {
-      return (
-        <>
-          <Grid item xs={12} md={5} mt={5}>
-            {section.image && (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: { xs: "100%", sm: "100%", md: "100%" },
-                }}
-              >
-                <img
-                  src={Image(section.image)}
-                  alt="Section Image"
-                  style={{ maxWidth: "350px", maxHeight: "800px" , display:'flex' , justifyContent:'center' , alignItems:"center"}}
-                />
-              </Box>
-            )}
-            <Grid container direction="column" spacing={2} mt={2}>
-              {section.logo &&
-                chunkArray(section.logo, 3).map((logoRow, rowIdx) => (
-                  <Grid container item spacing={2} key={rowIdx}>
-                    {logoRow.map((item, idx) => (
-                      <Grid item xs={4} key={idx}>
-                        <img
-                          src={Image(item)}
-                          alt="Logo"
-                          style={{ maxWidth: "100%" }}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ))}
-            </Grid>
-          </Grid>
-          <Grid item xs={12} md={7} mt={3}>
-          <CardContent sx={{ textAlign: "start" }}>
-              <Typography variant="subtitle" gutterBottom fontWeight={600}>
-                {section.title}
-              </Typography>
-              <Typography
-              variant="body"
-              gutterBottom
-              display="flex"
-              flexDirection="column"
-              color="#1783FE"
-              margin="10px 0"
-              >
-                {section.subtitle}
-              </Typography>
-              <Typography
-                variant="body"
-                gutterBottom
-                display="flex"
-                
-                align="justify"
-                // margin="20px 0px"
-              >
-                {section.description}
-              </Typography>
-              {index === 1 && (
-                <Box
-                  width={150}
-                  // margin={'30px 0 0 0'}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    cursor: "pointer"
-                  }}
-                >
-                  <Typography
-                    bgcolor={'#1783FE'}
-                    height={'50px'}
-                    width={'50px'}
-                    display={'flex'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    borderRadius={'50%'}
-                  >
-                    <PlayArrowOutlinedIcon fontSize='large' color='white' />
-                  </Typography>
-                  <Typography>
-                    Our Story
-                  </Typography>
-                </Box>
-              )}
-            </CardContent>
           </Grid>
         </>
       );
@@ -515,25 +599,83 @@ const About = () => {
   };
 
   return (
-    <Container sx={{ bgcolor: "#F4F4F4", padding: 0 }}>
+    <Container sx={{ bgcolor: "#F4F4F4", padding: isMobile ? 2 : 4 }}>
       {aboutUs.map((section, index) => (
-        <Grid container spacing={4} alignItems="flex-start" key={section._id}>
+        <Box key={section._id} sx={{ marginBottom: 4 }}>
           {renderContent(section, index)}
-        </Grid>
+        </Box>
       ))}
-
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "90%", md: "60%" },
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "10px",
+          }}
+        >
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography id="modal-title" variant="h6" component="h2">
+            Our Story
+          </Typography>
+          <Box
+            component="div"
+            sx={{
+              position: "relative",
+              paddingTop: "56.25%", 
+            }}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/2nsRe8ct_I8?si=O_PT36fIEbkm6mww"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                borderRadius: "10px", // Rounded corners
+              }}
+            ></iframe>
+          </Box>
+        </Box>
+      </Modal>
       <Card
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           padding: 2,
           mt: 4,
           color: "white",
           borderRadius: "20px",
         }}
       >
-        <Grid container spacing={4} justifyContent="center">
+        <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">
           {[
             { title: "Free Update", description: "No Any Pay For Update" },
             {
@@ -552,12 +694,20 @@ const About = () => {
                 <img
                   src={imgv}
                   alt={item.title}
-                  style={{ maxWidth: "100%", height: "auto" }}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    maxHeight: "100px",
+                  }}
                 />
-                <Typography variant="h6" fontWeight={900} marginTop={2}>
+                <Typography
+                  variant={isMobile ? "subtitle1" : "h6"}
+                  fontWeight={900}
+                  marginTop={2}
+                >
                   {item.title}
                 </Typography>
-                <Typography variant="body">{item.description}</Typography>
+                <Typography variant="body2">{item.description}</Typography>
               </Box>
             </Grid>
           ))}

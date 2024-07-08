@@ -865,7 +865,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="180px"
                 minHeight="100px"
               >
                 <Box

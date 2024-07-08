@@ -42,6 +42,7 @@ import { clearUser } from "../../redux/auth/authSlice";
 import ProductDetails from "../user/productDetails";
 import Header from "../user/Header";
 import { Image } from "../../../lib";
+import axiosInstance from "../../util/axiosInstance";
 
 const pages = [
   { id: "#home", name: "HOME" },
@@ -73,6 +74,8 @@ const Navbar = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [storeData, setStoreData] = useState(null); 
+  console.log(storeData);
+  const [error, setError] = useState(null);
 
   const toggleOrderDetailsDrawer = (newOpen) => () => {
     setDetails(newOpen);
@@ -114,10 +117,10 @@ const Navbar = () => {
     showSnackbar("Logged out successfully.");
   };
 
-
   const fetchData = async () => {
     try {
       const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+      console.log(response);
       setStoreData(response.data.storeSettings); 
       setError(null);
     } catch (error) {
@@ -128,7 +131,6 @@ const Navbar = () => {
     fetchData();
   }, []);
 
-
   const DrawerList = (
     <Box
       sx={{ width: 250 }}
@@ -138,16 +140,21 @@ const Navbar = () => {
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          paddingLeft: "25px",
+          textAlign: "left",
+          mt: 2,
+          ml: 3,    
         }}
       >
-       <img
+        {/* <img src={logo} alt="Logo" width="70%" /> */}
+        <a href="#home" onClick={() => setActivePage("#home")}>
+
+        <img
                   src={Image(storeData?.logo) }
                   alt="Logo"
-                  style={{ height: "70px", marginBottom: "20px" }}
-                />
+                  width={'70%'}
+                  />
+                  </a>
+                
       </Box>
       <List>
         {pages.map((text, index) => (
@@ -214,9 +221,14 @@ const Navbar = () => {
             disableGutters
           >
             {/* logo */}
-            <Box sx={{ width: { xs: "40%", md: "20%" } }}>
+            <Box sx={{ width: { xs: "40%", md: "20%" }, display:'flex', justifyContent:'start'}}>
               <a href="#home" onClick={() => setActivePage("#home")}>
-                <img src={logo} alt="Logo" width="100%" />
+                {/* <img src={logo} alt="Logo" width="100%" /> */}
+                <img
+                  src={Image(storeData?.logo) }
+                  alt="Logo"
+                  width={'100%'}
+                />
               </a>
             </Box>
 

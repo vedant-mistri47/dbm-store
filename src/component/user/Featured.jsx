@@ -20,6 +20,7 @@ import { styled } from "@mui/system";
 import axiosInstance from "../../util/axiosInstance";
 import { CURRENCIES_SYMBOL } from "../currency/currency";
 import { useDispatch, useSelector } from "react-redux";
+import { Image } from "../../../lib";
 
 const useStyles = makeStyles({
   carousel: {
@@ -71,19 +72,28 @@ const transformations = ["rotate(-8deg)", "rotate(12deg)", "rotate(12deg)"];
 const Featured = () => {
   const classes = useStyles();
   const [products, setProducts] = useState([]);
+  const [offers, setOffers] = useState(null)
   const { currency, exchangeRates } = useSelector((state) => state.currency);
   const currencySymbol = CURRENCIES_SYMBOL[currency];
   const dispatch = useDispatch();
 
+  
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("/app/offers");
+      const data = response.offers
+      setOffers(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axiosInstance.get("/app/discount/product", {
-          master_reseller_id: "626f85e0544a264104223e37",
-          phone: "+919898989899",
-          auth_type: "phone",
-          otp: "123123",
-        });
+        const response = await axiosInstance.get("/app/discount/product");
         if (response) {
           console.log(response);
           setProducts(response.data.products.slice(0, 3));
@@ -103,6 +113,8 @@ const Featured = () => {
     };
 
     fetchProducts();
+    fetchData();
+
   }, []);
 
   const multiCarouselResponsive = {
@@ -141,6 +153,7 @@ const Featured = () => {
   };
 
   const CustomDot = ({ onClick, active }) => {
+    const classes = useStyles();
     return (
       <li
         className={`${classes.customDot} ${active ? "active" : ""}`}
@@ -148,11 +161,12 @@ const Featured = () => {
       />
     );
   };
+console.log(offers);
 
   return (
     <Box sx={{ background: "#f4f4f4" }}>
       <Container>
-        <Carousel
+        {/* <Carousel
           showDots
           customDot={<CustomDot />}
           customButtonGroup={<CustomButtonGroup />}
@@ -264,7 +278,89 @@ const Featured = () => {
               </Grid>
             </Grid>
           </Card>
-        </Carousel>
+        </Carousel> */}
+
+          {/* <Carousel
+            showDots
+            customDot={<CustomDot />}
+            customButtonGroup={<CustomButtonGroup />}
+            arrows={false}
+            swipeable={false}
+            responsive={multiCarouselResponsive}
+            containerClass={classes.carousel}
+            dotListClass={classes.dotList}
+          >
+            {offers?.map((offer, index) => (
+              <Card
+                key={index}
+                sx={{
+                  width: "90%",
+                  textAlign: "center",
+                  borderRadius: "15px",
+                  p: 2,
+                }}
+              >
+                <Grid container spacing={1}>
+                  <Grid item xs={12} md={7}>
+                    <img src={Image(offer?.image)} alt="" width={"70%"} />
+                  </Grid>
+                  <Grid item xs={12} md={5} align="left">
+                    <Typography
+                      sx={{ my: "10px" }}
+                      variant="title"
+                      fontWeight={10}
+                    >
+                      {offer?.title}
+                    </Typography>
+                    <Typography sx={{ my: "10px" }} variant="h5">
+                      {offer?.description}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      sx={{ borderRadius: "10px", py: 1, mt: 5 }}
+                    >
+                      Discover Now
+                      <ArrowForwardRoundedIcon />
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Card>
+            ))}
+          </Carousel> */}
+
+{/* <Carousel
+          showDots
+          customDot={<CustomDot />}
+          customButtonGroup={<CustomButtonGroup />}
+          arrows={false}
+          swipeable={false}
+          responsive={multiCarouselResponsive}
+          containerClass={classes?.carousel}
+          dotListClass={classes?.dotList}
+        >
+          {offers?.map((offer, index) => (
+            <Typography>{offer}</Typography>
+            // <Card key={index} sx={{ width: '50%', textAlign: 'center', borderRadius: "15px", p: 2 }}>
+            //   <Grid container spacing={1}>
+            //     <Grid item xs={12} md={7} >
+            //       <img src={Image(offer?.image)} alt="" width={50} />
+            //     </Grid>
+            //     <Grid item xs={12} md={5} align='left'>
+            //       <Typography sx={{ my: "10px" }} variant='title' fontWeight={10}>
+            //         {offer?.title}
+            //       </Typography>
+            //       <Typography sx={{ my: "10px" }} variant='h5'>
+            //         {offer?.description}
+            //       </Typography>
+            //       <Button variant='contained' fullWidth sx={{ borderRadius: '10px', py: 1, mt: 5 }} >Discover Now<ArrowForwardRoundedIcon /></Button>
+            //     </Grid>
+            //   </Grid>
+            // </Card>
+          ))}
+        </Carousel> */}
+
+
 
         <Typography
           fontWeight={700}
@@ -310,7 +406,7 @@ const Featured = () => {
             >
               <StyledBadge
                 badgeContent={`${20}% Off`}
-                transform={transformations[index % transformations.length]}
+                transform={transformations[index % transformations?.length]}
               >
                 <Card
                   sx={{
@@ -366,14 +462,14 @@ const Featured = () => {
                         >
                           {currencySymbol}
                           {(
-                            product.rates.reduce(
+                            product?.rates?.reduce(
                               (min, rate) => Math.min(min, rate.price),
                               Infinity
                             ) * exchangeRates
                           ).toFixed(2)}{" "}
                           - {currencySymbol}
                           {(
-                            product.rates.reduce(
+                            product?.rates?.reduce(
                               (max, rate) => Math.max(max, rate.price),
                               -Infinity
                             ) * exchangeRates
