@@ -1,6 +1,6 @@
 import { Badge, Box, Divider, Drawer, Grid, Typography } from '@mui/material'
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import zomatoImg from '../image/google-map-extractor-7 1.png';
+import zomatoImg from '/image/google-map-extractor-7 1.png';
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../util/axiosInstance';
 import OrderDetails from './orderDetails';

@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { ThemeProvider, Box, createTheme } from "@mui/material";
+import { ThemeProvider, Box, createTheme , } from "@mui/material";
 import Navbar from "./component/site/navbar";
 import Home from "./component/user/Home";
 import Shop from "./component/user/Shop";
@@ -9,6 +9,7 @@ import Faq from "./component/user/Faq";
 import Featured from "./component/user/Featured";
 import Footer from "./component/user/Footer";
 import Header from "./component/user/Header";
+import Card from "./component/user/cart";
 
 // Define the theme directly inside App.js
 const theme = createTheme({
@@ -84,7 +85,16 @@ function App() {
         </section>
         <Footer />
       </Box>
+
+
+      {/* <SnackbarProvider maxSnack={3}>
+       <Card/>
+             </SnackbarProvider> */}
+  
     </ThemeProvider>
+
+
+
   );
 }
 

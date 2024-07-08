@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Box,
@@ -30,12 +30,11 @@ import Checkout from "../user/checkout";
 import Cart from "../user/cart";
 import Login from "./login";
 import Order from "../user/order";
-import logo from "../image/logo (1).png";
+import logo from "/image/logo (1).png";
 import OrderDetails from "../user/orderDetails";
 import EditProfile from "./editProfile";
 import Wishlist from "../user/wishlist";
 import { Logout } from "@mui/icons-material";
-import { store } from "../../redux/store";
 import { useSelector } from "react-redux";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useDispatch } from "react-redux";
@@ -43,6 +42,7 @@ import { clearUser } from "../../redux/auth/authSlice";
 import ProductDetails from "../user/productDetails";
 import Header from "../user/Header";
 import { Image } from "../../../lib";
+import axiosInstance from "../../util/axiosInstance";
 
 const pages = [
   { id: "#home", name: "HOME" },
@@ -73,6 +73,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [storeData, setStoreData] = useState(null); 
+  console.log(storeData);
+  const [error, setError] = useState(null);
 
   const toggleOrderDetailsDrawer = (newOpen) => () => {
     setDetails(newOpen);
@@ -80,7 +83,12 @@ const Navbar = () => {
   };
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const handleLoginModal = (newOpen) => () => setOpenLoginModal(newOpen);
+  const handleLoginModal = (newOpen) => () => {
+    setOpenLoginModal(newOpen)
+    if(newOpen){
+      setOpenCart(false)
+    }
+  };
   const handleClick = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
@@ -109,6 +117,20 @@ const Navbar = () => {
     showSnackbar("Logged out successfully.");
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+      console.log(response);
+      setStoreData(response.data.storeSettings); 
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const DrawerList = (
     <Box
       sx={{ width: 250 }}
@@ -118,12 +140,21 @@ const Navbar = () => {
     >
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          paddingLeft: "25px",
+          textAlign: "left",
+          mt: 2,
+          ml: 3,    
         }}
       >
-        <img src={logo} alt="Logo" width="70%" />
+        {/* <img src={logo} alt="Logo" width="70%" /> */}
+        <a href="#home" onClick={() => setActivePage("#home")}>
+
+        <img
+                  src={Image(storeData?.logo) }
+                  alt="Logo"
+                  width={'70%'}
+                  />
+                  </a>
+                
       </Box>
       <List>
         {pages.map((text, index) => (
@@ -190,9 +221,14 @@ const Navbar = () => {
             disableGutters
           >
             {/* logo */}
-            <Box sx={{ width: { xs: "40%", md: "20%" } }}>
+            <Box sx={{ width: { xs: "40%", md: "20%" }, display:'flex', justifyContent:'start'}}>
               <a href="#home" onClick={() => setActivePage("#home")}>
-                <img src={logo} alt="Logo" width="100%" />
+                {/* <img src={logo} alt="Logo" width="100%" /> */}
+                <img
+                  src={Image(storeData?.logo) }
+                  alt="Logo"
+                  width={'100%'}
+                />
               </a>
             </Box>
 
@@ -309,6 +345,7 @@ const Navbar = () => {
                 onClose={toggleCartDrawer(false)}
                 onClick={toggleCheckoutDrawer(true)}
                 openProduct={toggleDetailsDrawer(true)}
+                openLogin={handleLoginModal(true)}
               />
             </Drawer>
 
@@ -381,7 +418,6 @@ const Navbar = () => {
             >
               <Login
                 onClose={handleLoginModal(false)}
-                onLogin={() => setIsLoggedIn(true)}
               />
             </Modal>
 

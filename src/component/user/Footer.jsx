@@ -19,7 +19,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import img from "../image/logo (1).png";
+// import img from "../image/logo (1).png";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import XIcon from "@mui/icons-material/X";
 import YouTubeIcon from "@mui/icons-material/YouTube";
@@ -173,16 +173,16 @@ function Footer() {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
+      setStoreData(response.data.storeSettings); 
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
-        setStoreData(response.data.storeSettings); // Update state with the fetched data
-        setError(null);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
     fetchData();
   }, []);
 
@@ -202,7 +202,7 @@ function Footer() {
               flexDirection: { xs: "column", md: "row" },
             }}
           >
-            {/* Address and Contact Information */}
+       
             <Grid item xs={12} md={4}>
               <Box
                 display="flex"

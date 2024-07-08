@@ -15,7 +15,7 @@ import {
   SnackbarContent
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import image1 from "../image/img1.png";
+import image1 from "/image/img1.png";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -23,13 +23,13 @@ import TabPanel from "@mui/lab/TabPanel";
 import ImageIcon from "@mui/icons-material/Image";
 import "../../index.css";
 import { useTheme } from "@mui/system";
-import bulkimg from "../image/image 2.svg";
-import wew1 from "../image/Vectorhome 1 copy.svg";
-import wew2 from "../image/Vectorhome 2.svg";
-import star1 from "../image/Starhome 1.svg";
-import star2 from "../image/Starhome 2.svg";
-import bulkimgPdf from "../image/image 3.svg";
-import bulkimgaudio from "../image/image 4.svg";
+import bulkimg from "/image/image 2.svg";
+import wew1 from "/image/Vectorhome 1 copy.svg";
+import wew2 from "/image/Vectorhome 2.svg";
+import star1 from "/image/Starhome 1.svg";
+import star2 from "/image/Starhome 2.svg";
+import bulkimgPdf from "/image/image 3.svg";
+import bulkimgaudio from "/image/image 4.svg";
 import MailIcon from "@mui/icons-material/Mail";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -101,8 +101,8 @@ const Home = () => {
     return regex.test(email);
   };
   const isValidName = (name) => {
-    // Regex to match only alphabetic characters
-    const regex = /^[A-Za-z]+$/;
+    
+    const regex = /^[A-Za-z\s]+$/;
     return regex.test(name);
   }
   useEffect(() => {
@@ -841,7 +841,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -865,7 +865,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="180px"
                 minHeight="100px"
               >
                 <Box
@@ -1076,7 +1076,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -1126,7 +1126,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="120px"
                 minHeight="100px"
               >
                 <Box
@@ -1336,7 +1336,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="120px"
+                minWidth="122px"
                 minHeight="100px"
               >
                 <Box
@@ -1386,7 +1386,7 @@ return (
                 flexDirection="column"
                 alignItems="center"
                 textAlign="center"
-                minWidth="200px"
+                minWidth="120px"
                 minHeight="100px"
               >
                 <Box

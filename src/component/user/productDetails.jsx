@@ -113,9 +113,9 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
       if (prevQuantity > 1) {
         const newQuantity = prevQuantity - 1;
         setPrice(basePrice * newQuantity);
-        return newQuantity;
         setSnackbarMessage("Quantity decreased");
         setSnackbarOpen(true);
+        return newQuantity;
       }
       return prevQuantity;
     });
@@ -172,6 +172,7 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
     }
     setSnackbarOpen(true);
   };
+
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -180,45 +181,43 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
   };
 
   return (
-    <Box sx={{ width: { xs: 250, md: 350 }, p: 2 }}>
-      <Grid container alignItems="center" justifyContent="space-between" sx={{cursor:'pointer'}} mb={3}>
+    <Box sx={{ width: { xs: 250, md: 400 }, p: 3 }}>
+      <Grid container alignItems="center" justifyContent="space-between" sx={{ cursor: 'pointer' }} mb={2}>
         <NavigateBeforeRoundedIcon
           fontSize="large"
-          // sx={{ cursor: "pointer" }}
           onClick={onClose}
-          sx={{cursor:'pointer'}} 
+          sx={{ cursor: 'pointer' }}
         />
         <Typography fontWeight={600}>Product Detail</Typography>
         {cartDrawer}
       </Grid>
 
-   
-
       <Grid container my={1}>
-    <Grid 
-        item 
-        xs={12} 
-        sx={{ 
-            position: 'relative', 
-            borderRadius: 2, 
-            backgroundColor: '#eee', 
-            textAlign: 'center' 
-        }}
-    >
-        <img width="65%" src={productData.image} alt="Product" />
-        <Checkbox 
-            onChange={handleWishlist} 
-            checked={isProductInWishlist} 
-            icon={<FavoriteBorder />} 
-            checkedIcon={<Favorite />} 
+        <Grid 
+            item 
+            xs={12} 
             sx={{ 
-                position: 'absolute',
-                top: 8, 
-                right: 8, 
-            }} 
-        />
-    </Grid>
-</Grid>
+                position: 'relative', 
+                borderRadius: 2, 
+                backgroundColor: '#eee', 
+                textAlign: 'center' 
+            }}
+        >
+            <img width="65%" src={productData.image} alt="Product" />
+            <Checkbox 
+                onChange={handleWishlist} 
+                checked={isProductInWishlist} 
+                icon={<FavoriteBorder />} 
+                checkedIcon={<Favorite />} 
+                sx={{ 
+                    position: 'absolute',
+                    top: 8, 
+                    right: 8, 
+                }} 
+            />
+        </Grid>
+      </Grid>
+      
       <Box>
         <Badge badgeContent="NEW" color="primary" sx={{ ml: 2 }} />
         <Grid container alignItems="flex-end" spacing={2}>
@@ -232,15 +231,14 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
             </Grid>
           </Grid>
           <Grid container item xs={4} justifyContent="center" alignItems='center'>
-            
           </Grid>
-              <Typography color='khaki' my={1} sx={{ ml: 2 }} > price :  
-              {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
-                 </Typography> 
+          <Typography color='khaki' my={1} sx={{ ml: 2 }} > price :  
+          {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
+          </Typography> 
         </Grid>
       </Box>
 
-      <Box sx={{ my: 1 }}>
+      <Box sx={{ my: 0 }}>
         <Typography fontWeight="bold">Descriptions</Typography>
         <Typography noWrap={!expanded}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi
@@ -277,30 +275,46 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
         ))}
       </Grid>
 
-      <Grid container my={2}>
-        <Grid item xs={6}>
-          <Typography fontWeight={600}>{currencySymbol}{(price * exchangeRates).toFixed(2)}</Typography>
+      <Grid container my={2} alignItems="center" justifyContent="space-between">
+        <Grid item xs={12} sm={6} display={'flex'} gap={1} alignItems="center">
+          <Typography>({selectedVariation.price} x {isInCart() > 0 ? isInCart() : localQuantity})</Typography>
+          <Typography fontWeight={600}>
+            {currencySymbol}{(price * exchangeRates).toFixed(2)}
+          </Typography>
         </Grid>
-        <Grid
-          item
-          xs={6}
-          container
-          alignItems="center"
-          justifyContent="space-evenly"
-        >
-          <RemoveOutlinedIcon
-            sx={buttonStyle}
-            onClick={() =>
-              isInCart() > 0 ? decreaseCartItem() : decreaseLocalQuantity()
-            }
-          />
+        <Grid item xs={12} sm={6} display={'flex'} justifyContent="flex-end" alignItems="center" gap={1}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#ccc', 
+              borderRadius: '50%',
+            }}
+          >
+            <RemoveOutlinedIcon
+              onClick={() =>
+                isInCart() > 0 ? decreaseCartItem() : decreaseLocalQuantity()
+              }
+            />
+          </Box>
           <Typography>{isInCart() > 0 ? isInCart() : localQuantity}</Typography>
-          <AddOutlinedIcon
-            sx={buttonStyle}
-            onClick={() =>
-              isInCart() > 0 ? increaseCartItem() : increaseLocalQuantity()
-            }
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#ccc', 
+              borderRadius: '50%',
+            }}
+          >
+            <AddOutlinedIcon
+              sx={buttonStyle}
+              onClick={() =>
+                isInCart() > 0 ? increaseCartItem() : increaseLocalQuantity()
+              }
+            />
+          </Box>
         </Grid>
       </Grid>
 
@@ -309,7 +323,6 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
         color="black"
         sx={{ color: "#fff", borderRadius: 2, p: 1 }}
         fullWidth
-        // disabled={isInCart() > 0}
         onClick={isInCart() > 0 ? onClick : addToCartHandler}
       >
         {loading ? (
