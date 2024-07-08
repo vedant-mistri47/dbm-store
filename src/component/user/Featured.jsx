@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import hiringImage from "../image/Image.png";
+import hiringImage from "/image/Image.png";
 import Carousel from "react-multi-carousel";
 import { makeStyles } from "@mui/styles";
 import "react-multi-carousel/lib/styles.css";
-import zomatoImg from "../image/google-map-extractor-7 1.png";
+// import zomatoImg from "../image/google-map-extractor-7 1.png";
 import {
   Badge,
   Box,
@@ -75,35 +75,34 @@ const Featured = () => {
   const currencySymbol = CURRENCIES_SYMBOL[currency];
   const dispatch = useDispatch();
 
+  const fetchProducts = async () => {
+    try {
+      const response = await axiosInstance.get("/app/discount/product");
+      // if (response) {
+      //   console.log(response);
+      //   setProducts(response.data.products.slice(0, 3));
+      // }
+    } catch (error) {
+      // if (error.response) {
+      //   // The request was made and the server responded with a status code
+      //   console.error("Server Error:", error.response.data);
+      // } else if (error.request) {
+      //   // The request was made but no response was received
+      //   console.error("Request Error:", error.request);
+      // } else {
+      //   // Something happened in setting up the request that triggered an error
+      //   console.error("Error:", error.message);
+      // }
+    }
+  };
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axiosInstance.get("/app/discount/product", {
-          master_reseller_id: "626f85e0544a264104223e37",
-          phone: "+919898989899",
-          auth_type: "phone",
-          otp: "123123",
-        });
-        if (response) {
-          console.log(response);
-          setProducts(response.data.products.slice(0, 3));
-        }
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          console.error("Server Error:", error.response.data);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.error("Request Error:", error.request);
-        } else {
-          // Something happened in setting up the request that triggered an error
-          console.error("Error:", error.message);
-        }
-      }
-    };
-
-    fetchProducts();
+    // fetchProducts();
   }, []);
+
+  const getData=async()=>{
+    const response = await axiosInstance.get("/app/discount/product");
+    console.log("response",response)
+  }
 
   const multiCarouselResponsive = {
     superLargeDesktop: {
@@ -134,6 +133,7 @@ const Featured = () => {
         justifyContent="center"
         alignItems="center"
       >
+        <Button onClick={()=>{getData()}}>click cherck</Button>
         <ArrowBackRoundedIcon onClick={previous} sx={arrowStyle} />
         <ArrowForwardRoundedIcon onClick={next} sx={arrowStyle} />
       </Box>

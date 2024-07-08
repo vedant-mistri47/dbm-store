@@ -13,7 +13,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setToken, setUserDetail } from "../../redux/auth/authSlice";
 import axiosInstance from "../../util/axiosInstance";
-import logo from "../image/logo (1).png";
+import logo from "/image/logo (1).png";
 
 function Login({ onClose }) {
   const [number, setNumber] = useState("");
