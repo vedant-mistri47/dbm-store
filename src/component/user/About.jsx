@@ -304,7 +304,7 @@ const About = () => {
               color: (theme) => theme.palette.grey[500],
             }}
           >
-            <CloseIcon />
+            {/* <CloseIcon /> */}
           </IconButton>
           <Typography id="modal-title" variant="h6" component="h2">
             Our Story

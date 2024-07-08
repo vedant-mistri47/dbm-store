@@ -37,24 +37,34 @@ const buttonStyle = {
 const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
   const productData = product?.product;
   const [expanded, setExpanded] = useState(false);
-  const [selectedVariation, setSelectedVariation] = useState(product?.variation ?? productData?.rates[0]);
+  const [selectedVariation, setSelectedVariation] = useState(
+    product?.variation ?? productData?.rates[0]
+  );
   const [variation, setVariation] = useState(productData?.rates[0]);
   const [loading, setLoading] = useState(false);
-  const [basePrice, setBasePrice] = useState(product?.variation?.price ?? productData?.rates[0].price);
+  const [quantityLoading, setQuanityLoading] = useState(false);
+  const [basePrice, setBasePrice] = useState(
+    product?.variation?.price ?? productData?.rates[0].price
+  );
   const [price, setPrice] = useState(basePrice);
   const [localQuantity, setLocalQuantity] = useState(1);
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const wishlistItems = useSelector((state) => state.wishlist.items);
-  const isProductInWishlist = wishlistItems?.find(item => item?.product?.id === productData?.id)?.isInWishlist;
+  const isProductInWishlist = wishlistItems?.find(
+    (item) => item?.product?.id === productData?.id
+  )?.isInWishlist;
   const { currency, exchangeRates } = useSelector((state) => state.currency);
-  const currencySymbol = CURRENCIES_SYMBOL[currency]
+  const currencySymbol = CURRENCIES_SYMBOL[currency];
   const dispatch = useDispatch();
 
-  const cartItems = useSelector(state => state.cart?.items);
+  const cartItems = useSelector((state) => state.cart?.items);
 
   useEffect(() => {
-    const productInCart = cartItems?.find(item => item.id === productData?._id && item.variation?._id === variation?._id);
+    const productInCart = cartItems?.find(
+      (item) =>
+        item.id === productData?._id && item.variation?._id === variation?._id
+    );
     if (productInCart) {
       setLocalQuantity(productInCart.quantity);
       setPrice(basePrice * productInCart.quantity);
@@ -65,7 +75,11 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
   }, [cartItems, productData, basePrice, variation]);
 
   const isInCart = () => {
-    const productInCart = cartItems.find(item => item.id === productData.id && item.variation?._id === selectedVariation?._id);
+    const productInCart = cartItems.find(
+      (item) =>
+        item.id === productData.id &&
+        item.variation?._id === selectedVariation?._id
+    );
     return productInCart ? productInCart.quantity : 0;
   };
 
@@ -99,39 +113,60 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
   };
 
   const increaseLocalQuantity = () => {
-    setLocalQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1;
-      setPrice(basePrice * newQuantity);
-      return newQuantity;
-    });
-    setSnackbarMessage("Quantity increased");
-    setSnackbarOpen(true);
+    setQuanityLoading(true);
+    setTimeout(() => {
+      setQuanityLoading(false);
+      setLocalQuantity((prevQuantity) => {
+        const newQuantity = prevQuantity + 1;
+        setPrice(basePrice * newQuantity);
+        return newQuantity;
+      });
+      setSnackbarMessage("Quantity increased");
+      setSnackbarOpen(true);
+    }, 1500);
   };
 
   const decreaseLocalQuantity = () => {
-    setLocalQuantity((prevQuantity) => {
-      if (prevQuantity > 1) {
-        const newQuantity = prevQuantity - 1;
-        setPrice(basePrice * newQuantity);
-        setSnackbarMessage("Quantity decreased");
-        setSnackbarOpen(true);
-        return newQuantity;
-      }
-      return prevQuantity;
-    });
+    if (localQuantity > 1) {
+      setQuanityLoading(true);
+    }
+    setTimeout(() => {
+      setQuanityLoading(false);
+      setLocalQuantity((prevQuantity) => {
+        if (prevQuantity > 1) {
+          const newQuantity = prevQuantity - 1;
+          setPrice(basePrice * newQuantity);
+          setSnackbarMessage("Quantity decreased");
+          setSnackbarOpen(true);
+          return newQuantity;
+        }
+        return prevQuantity;
+      });
+    }, 1500);
   };
 
   const increaseCartItem = () => {
+    if (localQuantity > 1) {
+      setQuanityLoading(true);
+    }
     dispatch(
       increaseQuantity({ id: productData._id, variationId: variation._id })
     );
+    setTimeout(() => {
+      setQuanityLoading(false);
     const newQuantity = isInCart() + 1;
     setPrice(basePrice * newQuantity);
     setSnackbarMessage("Quantity increased in cart");
     setSnackbarOpen(true);
+  }, 1500);
   };
 
   const decreaseCartItem = () => {
+    if (localQuantity > 1) {
+      setQuanityLoading(true);
+    }
+    setTimeout(() => {
+      setQuanityLoading(false);
     const productInCart = cartItems.find(
       (item) =>
         item.id === productData._id && item.variation._id === variation._id
@@ -149,10 +184,14 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
         decreaseQuantity({ id: productData._id, variationId: variation._id })
       );
     }
+  }, 1500);
   };
 
   const handleVariationClick = (index = 0, id) => {
-    const selectedVariation = productData.rates ? productData.rates.find(item => id === item._id) : productData.rates.find((item, idx) => index === idx);
+    const selectedVariation = productData.rates
+      ? productData.rates.find((item) => id === item._id)
+      : productData.rates.find((item, idx) => index === idx);
+      
     setSelectedVariation(selectedVariation);
     setVariation(selectedVariation);
     setBasePrice(selectedVariation.price);
@@ -182,47 +221,53 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
 
   return (
     <Box sx={{ width: { xs: 250, md: 400 }, p: 3 }}>
-      <Grid container alignItems="center" justifyContent="space-between" sx={{ cursor: 'pointer' }} mb={2}>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ cursor: "pointer" }}
+        mb={2}
+      >
         <NavigateBeforeRoundedIcon
           fontSize="large"
           onClick={onClose}
-          sx={{ cursor: 'pointer' }}
+          sx={{ cursor: "pointer" }}
         />
         <Typography fontWeight={600}>Product Detail</Typography>
         {cartDrawer}
       </Grid>
 
       <Grid container my={1}>
-        <Grid 
-            item 
-            xs={12} 
-            sx={{ 
-                position: 'relative', 
-                borderRadius: 2, 
-                backgroundColor: '#eee', 
-                textAlign: 'center' 
-            }}
+        <Grid
+          item
+          xs={12}
+          sx={{
+            position: "relative",
+            borderRadius: 2,
+            backgroundColor: "#eee",
+            textAlign: "center",
+          }}
         >
-            <img width="65%" src={productData.image} alt="Product" />
-            <Checkbox 
-                onChange={handleWishlist} 
-                checked={isProductInWishlist} 
-                icon={<FavoriteBorder />} 
-                checkedIcon={<Favorite />} 
-                sx={{ 
-                    position: 'absolute',
-                    top: 8, 
-                    right: 8, 
-                }} 
-            />
+          <img width="60%" src={productData.image} alt="Product" />
+          <Checkbox
+            onChange={handleWishlist}
+            checked={isProductInWishlist}
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite />}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+            }}
+          />
         </Grid>
       </Grid>
-      
+
       <Box>
         <Badge badgeContent="NEW" color="primary" sx={{ ml: 2 }} />
         <Grid container alignItems="flex-end" spacing={2}>
           <Grid item xs={8}>
-            <Typography sx={{ my: 1, fontWeight: 'bold' }}>
+            <Typography sx={{ my: 1, fontWeight: "bold" }}>
               {productData.name}
             </Typography>
             <Grid container justifyContent="space-between">
@@ -230,15 +275,34 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
               <Typography>99+ Reviews</Typography>
             </Grid>
           </Grid>
-          <Grid container item xs={4} justifyContent="center" alignItems='center'>
-          </Grid>
-          <Typography color='khaki' my={1} sx={{ ml: 2 }} > price :  
-          {currencySymbol}{(productData.rates.reduce((min, rate) => Math.min(min, rate.price), Infinity) * exchangeRates).toFixed(2)}-{currencySymbol}{(productData.rates.reduce((max, rate) => Math.max(max, rate.price), -Infinity) * exchangeRates).toFixed(2) }
-          </Typography> 
+          <Grid
+            container
+            item
+            xs={4}
+            justifyContent="center"
+            alignItems="center"
+          ></Grid>
+          <Typography color="khaki" my={1} sx={{ ml: 2 }}>
+            {" "}
+            price :{currencySymbol}
+            {(
+              productData.rates.reduce(
+                (min, rate) => Math.min(min, rate.price),
+                Infinity
+              ) * exchangeRates
+            ).toFixed(2)}
+            -{currencySymbol}
+            {(
+              productData.rates.reduce(
+                (max, rate) => Math.max(max, rate.price),
+                -Infinity
+              ) * exchangeRates
+            ).toFixed(2)}
+          </Typography>
         </Grid>
       </Box>
 
-      <Box sx={{ my: 0 }}>
+      <Box sx={{ my: 2 }}>
         <Typography fontWeight="bold">Descriptions</Typography>
         <Typography noWrap={!expanded}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi
@@ -262,12 +326,14 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
         {productData.rates.map((item, index) => (
           <Grid item xs={6} md={4} key={index}>
             <Box
-              textAlign='center'
+              textAlign="center"
               borderRadius={5}
-              py={0.5}
-              border={`2px solid ${selectedVariation?._id === item._id ? 'blue' : 'gray'}`}
+              // py={0.5}
+              border={`2px solid ${
+                selectedVariation?._id === item._id ? "blue" : "gray"
+              }`}
               onClick={() => handleVariationClick(index, item._id)}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: "pointer" }}
             >
               <Typography>{item.title}</Typography>
             </Box>
@@ -276,42 +342,73 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
       </Grid>
 
       <Grid container my={2} alignItems="center" justifyContent="space-between">
-        <Grid item xs={12} sm={6} display={'flex'} gap={1} alignItems="center">
-          <Typography>({selectedVariation.price} x {isInCart() > 0 ? isInCart() : localQuantity})</Typography>
+        <Grid item xs={12} sm={6} display={"flex"} gap={1} alignItems="center">
+          <Typography>
+            ({currencySymbol}
+            {(selectedVariation.price * exchangeRates).toFixed(2)} x{" "}
+            {isInCart() > 0 ? isInCart() : localQuantity})
+          </Typography>
           <Typography fontWeight={600}>
-            {currencySymbol}{(price * exchangeRates).toFixed(2)}
+            {currencySymbol}
+            {(price * exchangeRates).toFixed(2)}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={6} display={'flex'} justifyContent="flex-end" alignItems="center" gap={1}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          display={"flex"}
+          justifyContent="flex-end"
+          alignItems="center"
+          gap={1}
+        >
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#ccc', 
-              borderRadius: '50%',
+              cursor:'pointer',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#ccc",
+              borderRadius: "50%",
             }}
           >
             <RemoveOutlinedIcon
               onClick={() =>
-                isInCart() > 0 ? decreaseCartItem() : decreaseLocalQuantity()
+                quantityLoading
+                  ? " "
+                  : isInCart() > 0
+                  ? decreaseCartItem()
+                  : decreaseLocalQuantity()
               }
             />
           </Box>
-          <Typography>{isInCart() > 0 ? isInCart() : localQuantity}</Typography>
+          <Typography >
+            {quantityLoading ? (
+              <CircularProgress size={15} color="inherit" />
+            ) : isInCart() > 0 ? (
+              isInCart()
+            ) : (
+              localQuantity
+            )}
+          </Typography>
+
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#ccc', 
-              borderRadius: '50%',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#ccc",
+              borderRadius: "50%",
             }}
           >
             <AddOutlinedIcon
               sx={buttonStyle}
               onClick={() =>
-                isInCart() > 0 ? increaseCartItem() : increaseLocalQuantity()
+                quantityLoading
+                  ? " "
+                  : isInCart() > 0
+                  ? increaseCartItem()
+                  : increaseLocalQuantity()
               }
             />
           </Box>
@@ -326,9 +423,11 @@ const ProductDetails = ({ onClose, product, cartDrawer, onClick }) => {
         onClick={isInCart() > 0 ? onClick : addToCartHandler}
       >
         {loading ? (
-          <CircularProgress size={24} color="inherit" />
+          <CircularProgress size={15} color="inherit" />
+        ) : isInCart() > 0 ? (
+          "Go to cart"
         ) : (
-          isInCart() > 0 ? "Go to cart" : "Add to Cart"
+          "Add to Cart"
         )}
       </Button>
 
