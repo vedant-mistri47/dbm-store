@@ -97,7 +97,10 @@ const Faq = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/app/contact-form", data);
+      const response = await axiosInstance.post("/app/contact-form", {
+        ...data,
+        reCaptchaKey,
+      });
       console.log("Form submission response:", response.data);
       // Optionally handle success response or show notification
       // Reset form after successful submission
@@ -466,6 +469,7 @@ const Faq = () => {
                 <ReCAPTCHA
                   sitekey={SITE_KEY}
                   onChange={(value) => {
+                    setReCaptchaKey(value);
                     console.log("Captcha value:", value);
                   }}
                 />
