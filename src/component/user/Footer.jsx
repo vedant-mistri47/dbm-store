@@ -27,6 +27,8 @@ import GoogleIcon from "@mui/icons-material/Google";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import axiosInstance from "../../util/axiosInstance";
 import {Image} from "../../../lib"
+import { useDispatch } from "react-redux";
+import { setData } from "../../redux/data/dataSlice";
 function Footer() {
   const [showScroll, setShowScroll] = useState(false);
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
@@ -54,6 +56,7 @@ function Footer() {
   };
 
   const isLargeDevice = useMediaQuery((theme) => theme.breakpoints.up("md"));
+  const dispatch = useDispatch()
 
   const checkScrollTop = () => {
     if (!showScroll && window.pageYOffset > 400) {
@@ -177,6 +180,7 @@ function Footer() {
     try {
       const response = await axiosInstance.get("app/store/626f85e0544a264104223e37");
       setStoreData(response.data.storeSettings); 
+      dispatch(setData(response.data.storeSettings))
       setError(null);
     } catch (error) {
       setError(error.message);

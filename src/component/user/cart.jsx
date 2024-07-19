@@ -15,7 +15,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import NavigateBeforeRoundedIcon from "@mui/icons-material/NavigateBeforeRounded";
 import CloseIcon from "@mui/icons-material/Close";
 import DiscountRoundedIcon from "@mui/icons-material/DiscountRounded";
-import emptyCart from "../image/emptyCart.png";
+import emptyCart from "/image/emptyCart.png";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
